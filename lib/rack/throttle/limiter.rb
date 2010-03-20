@@ -24,13 +24,51 @@ module Rack module Throttle
     end
 
     ##
-    # Checks whether the rate limit has been exceeded.
+    # Returns `true` if the rate limit has been exceeded for the given
+    # `request`.
     #
     # @param  [Rack::Request] request
     # @return [Boolean]
     def match?(request)
-      false # TODO
+      case
+        when blacklisted?(request) then true
+        when whitelisted?(request) then false
+        else false # TODO
+      end
     end
+
+    alias_method :match, :match?
+
+    ##
+    # Returns `true` if the originator of the given `request` is whitelisted
+    # (not subject to further rate limits).
+    #
+    # The default implementation always returns `false`. Override this
+    # method in a subclass to implement custom whitelisting logic.
+    #
+    # @param  [Rack::Request] request
+    # @return [Boolean]
+    # @abstract
+    def whitelisted?(request)
+      false
+    end
+
+    ##
+    # Returns `true` if the originator of the given `request` is blacklisted
+    # (not honoring rate limits, and thus permanently forbidden access
+    # without the need to maintain further rate limit counters).
+    #
+    # The default implementation always returns `false`. Override this
+    # method in a subclass to implement custom blacklisting logic.
+    #
+    # @param  [Rack::Request] request
+    # @return [Boolean]
+    # @abstract
+    def blacklisted?(request)
+      false
+    end
+
+    protected
 
     ##
     # Outputs a `Rate Limit Exceeded` error.
@@ -50,7 +88,7 @@ module Rack module Throttle
     end
 
     ##
-    # Outputs an HTTP 4xx or 5xx response.
+    # Outputs an HTTP `4xx` or `5xx` response.
     #
     # @param  [Integer]       code
     # @param  [String, #to_s] message
@@ -61,7 +99,7 @@ module Rack module Throttle
     end
 
     ##
-    # Returns the HTTP status message for the given status `code`.
+    # Returns the standard HTTP status message for the given status `code`.
     #
     # @param  [Integer] code
     # @return [String]
