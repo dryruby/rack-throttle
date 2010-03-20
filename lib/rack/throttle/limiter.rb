@@ -1,7 +1,9 @@
 module Rack module Throttle
   ##
+  # Rate limiter middleware for Rack.
   class Limiter
     attr_reader :app
+    attr_reader :options
 
     ##
     # @param  [#call]                  app
@@ -14,7 +16,28 @@ module Rack module Throttle
     # @param  [Hash{String => String}] env
     # @return [Array(Integer, Hash, #each)]
     def call(env)
-      app.call(env) # TODO
+      if match?(request = Rack::Request.new(env))
+        rate_limit_exceeded
+      else
+        app.call(env)
+      end
+    end
+
+    ##
+    # Checks whether the rate limit has been exceeded.
+    #
+    # @param  [Rack::Request] request
+    # @return [Boolean]
+    def match?(request)
+      false # TODO
+    end
+
+    ##
+    # Outputs a `Rate Limit Exceeded` error.
+    #
+    # @return [Array(Integer, Hash, #each)]
+    def rate_limit_exceeded
+      forbidden(options[:message] || 'Rate Limit Exceeded')
     end
 
     ##
