@@ -1,0 +1,11 @@
+--title "Rack::Throttle - HTTP Request Rate Limiter for Rack"
+--output-dir doc/yard
+--protected
+--no-private
+--hide-void-return
+--markup markdown
+--readme README.md
+-
+AUTHORS
+UNLICENSE
+VERSION
