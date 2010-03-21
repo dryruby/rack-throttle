@@ -62,7 +62,7 @@ keyed to unique HTTP clients.
 By default, HTTP clients are uniquely identified by their IP address as
 returned by `Rack::Request#ip`. If you wish to instead use a more granular,
 application-specific identifier such as a session key or a user account
-name, just subclass `Rack::Throttle::Interval` and override the
+name, you need only subclass `Rack::Throttle::Interval` and override the
 `#client_identifier` method.
 
 HTTP Response Codes and Headers
@@ -91,7 +91,7 @@ An HTTP 503 response would be correct in situations where the server was
 genuinely overloaded and couldn't handle more requests, but for rate
 limiting an HTTP 403 response is more appropriate. Nonetheless, if you think
 otherwise, `Rack::Throttle` does allow you to override the returned HTTP
-status code by passing in the `:code => 503` option when constructing a
+status code by passing in a `:code => 503` option when constructing a
 `Rack::Throttle::Limiter` instance.
 
 Documentation
