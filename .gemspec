@@ -6,7 +6,7 @@ GEMSPEC = Gem::Specification.new do |gem|
   gem.date               = File.mtime('VERSION').strftime('%Y-%m-%d')
 
   gem.name               = 'rack-throttle'
-  gem.homepage           = 'http://github.com/datagraph/rack-throttle'
+  gem.homepage           = 'http://github.com/datagraph'
   gem.license            = 'Public Domain' if gem.respond_to?(:license=)
   gem.summary            = 'Rate limiter for Rack.'
   gem.description        = 'Rack middleware for rate-limiting HTTP requests.'
@@ -27,6 +27,7 @@ GEMSPEC = Gem::Specification.new do |gem|
 
   gem.required_ruby_version      = '>= 1.8.2'
   gem.requirements               = []
+  gem.add_development_dependency 'rack-test', '>= 0.5.3'
   gem.add_development_dependency 'rspec',     '>= 1.3.0'
   gem.add_development_dependency 'yard' ,     '>= 0.5.3'
   gem.add_runtime_dependency     'rack',      '>= 1.0.0'
