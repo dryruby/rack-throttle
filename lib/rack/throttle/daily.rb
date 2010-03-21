@@ -1,4 +1,4 @@
-module Rack module Throttle
+module Rack; module Throttle
   ##
   # This rate limiter strategy throttles by defining a maximum number of
   # allowed HTTP requests per day (by default, 86,400 requests per 24 hours,
@@ -6,4 +6,4 @@ module Rack module Throttle
   class Daily < Limiter
     # TODO
   end
-end end
+end; end

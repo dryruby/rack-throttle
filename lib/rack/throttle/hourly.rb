@@ -1,4 +1,4 @@
-module Rack module Throttle
+module Rack; module Throttle
   ##
   # This rate limiter strategy throttles by defining a maximum number of
   # allowed HTTP requests per hour (by default, 3,600 requests per 60
@@ -6,4 +6,4 @@ module Rack module Throttle
   class Hourly < Limiter
     # TODO
   end
-end end
+end; end

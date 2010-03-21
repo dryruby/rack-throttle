@@ -1,4 +1,4 @@
-module Rack module Throttle
+module Rack; module Throttle
   ##
   # This is the base class for rate limiter implementations.
   class Limiter
@@ -185,4 +185,4 @@ module Rack module Throttle
       [code, Rack::Utils::HTTP_STATUS_CODES[code]].join(' ')
     end
   end
-end end
+end; end

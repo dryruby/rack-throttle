@@ -1,4 +1,4 @@
-module Rack module Throttle
+module Rack; module Throttle
   module VERSION
     MAJOR = 0
     MINOR = 0
@@ -20,4 +20,4 @@ module Rack module Throttle
     # @return [Array(Integer, Integer, Integer)]
     def self.to_a() [MAJOR, MINOR, TINY] end
   end
-end end
+end; end

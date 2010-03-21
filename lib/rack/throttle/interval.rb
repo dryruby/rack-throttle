@@ -1,4 +1,4 @@
-module Rack module Throttle
+module Rack; module Throttle
   ##
   # This rate limiter strategy throttles by defining a minimum interval (by
   # default, 1 second) between subsequent allowed HTTP requests.
@@ -35,4 +35,4 @@ module Rack module Throttle
       @min ||= (@options[:min] || 1.0).to_f
     end
   end
-end end
+end; end
