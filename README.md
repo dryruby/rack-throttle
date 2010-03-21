@@ -8,6 +8,11 @@ with Sinatra.
 
 * <http://github.com/datagraph/rack-throttle>
 
+Features
+--------
+* Works with the [memcached][], [memcache-client][], [memcache][] and
+  [redis][] gems.
+
 Examples
 --------
 
@@ -25,7 +30,13 @@ Examples
 
 ### Using Memcached to store rate-limiting counters
 
+    require 'memcached'
     use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => :throttle
+
+### Using Redis to store rate-limiting counters
+
+    require 'redis'
+    use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
 
 Documentation
 -------------
@@ -73,4 +84,8 @@ License
 `Rack::Throttle` is free and unencumbered public domain software. For more
 information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 
-[Rack]: http://rack.rubyforge.org/
+[Rack]:            http://rack.rubyforge.org/
+[memcached]:       http://rubygems.org/gems/memcached
+[memcache-client]: http://rubygems.org/gems/memcache-client
+[memcache]:        http://rubygems.org/gems/memcache
+[redis]:           http://rubygems.org/gems/redis
