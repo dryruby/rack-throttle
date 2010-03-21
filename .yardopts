@@ -1,4 +1,4 @@
---title "Rack::Throttle - HTTP Request Rate Limiter for Rack"
+--title "Rack::Throttle - HTTP Request Rate Limiter for Rack Applications"
 --output-dir doc/yard
 --protected
 --no-private
