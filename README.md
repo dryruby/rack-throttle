@@ -46,6 +46,18 @@ Examples
     require 'redis'
     use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
 
+HTTP Client Identification
+--------------------------
+
+The rate-limiting counters stored and maintained by `Rack::Throttle` are
+keyed to unique HTTP clients.
+
+By default, HTTP clients are uniquely identified by their IP address as
+returned by `Rack::Request#ip`. If you wish to instead use a more granular,
+application-specific identifier such as a session key or a user account
+name, just subclass `Rack::Throttle::Interval` and override the
+`#client_identifier` method.
+
 HTTP Response Codes and Headers
 -------------------------------
 
