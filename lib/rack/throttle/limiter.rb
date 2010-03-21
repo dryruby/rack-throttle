@@ -1,6 +1,14 @@
 module Rack; module Throttle
   ##
   # This is the base class for rate limiter implementations.
+  #
+  # @example Defining a rate limiter subclass
+  #   class MyLimiter < Limiter
+  #     def allowed?(request)
+  #       # TODO: custom logic goes here
+  #     end
+  #   end
+  #
   class Limiter
     attr_reader :app
     attr_reader :options

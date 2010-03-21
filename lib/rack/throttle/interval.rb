@@ -3,6 +3,13 @@ module Rack; module Throttle
   # This rate limiter strategy throttles the application by enforcing a
   # minimum interval (by default, 1 second) between subsequent allowed HTTP
   # requests.
+  #
+  # @example Allowing up to two requests per second
+  #   use Rack::Throttle::Interval, :min => 0.5   #  500 ms interval
+  #
+  # @example Allowing a request every two seconds
+  #   use Rack::Throttle::Interval, :min => 2.0   # 2000 ms interval
+  #
   class Interval < Limiter
     ##
     # @param  [#call]                  app

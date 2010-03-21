@@ -11,7 +11,7 @@ with Sinatra.
 Examples
 --------
 
-### Adding throttling to a Rack application
+### Adding throttling to a Rackup application
 
     require 'rack/throttle'
 
@@ -23,12 +23,14 @@ Examples
 
     use Rack::Throttle::Interval, :min => 3.0
 
-### Using a Memcached server to store rate-limiting counters
+### Using Memcached to store rate-limiting counters
 
-    use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => 'throttle'
+    use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => :throttle
 
 Documentation
 -------------
+
+<http://datagraph.rubyforge.org/rack-throttle/>
 
 * {Rack::Throttle}
   * {Rack::Throttle::Interval}
