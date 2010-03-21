@@ -1,27 +1,31 @@
 HTTP Request Rate Limiter for Rack
 ==================================
 
-`Rack::Throttle` is [Rack][] middleware that provides support for
-rate-limiting incoming HTTP requests to your Rack application.
+This is [Rack][] middleware that provides logic for rate-limiting incoming
+HTTP requests to your Rack application. You can use `Rack::Throttle` with
+any Ruby web framework based on Rack, including with Ruby on Rails 3.0 and
+with Sinatra.
 
 * <http://github.com/datagraph/rack-throttle>
 
 Examples
 --------
 
+### Adding throttling to a Rack application
+
     require 'rack/throttle'
 
-### Enforcing a 3-second delay between requests
+    use Rack::Throttle::Interval
+
+    run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
+
+### Enforcing a 3-second interval between requests
 
     use Rack::Throttle::Interval, :min => 3.0
 
-    run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
-
 ### Using a Memcached server to store rate-limiting counters
 
-    use Rack::Throttle::Interval, :min => 3.0, :cache => Memcached.new
-
-    run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
+    use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => 'throttle'
 
 Documentation
 -------------
