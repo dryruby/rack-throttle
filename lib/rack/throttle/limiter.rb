@@ -1,6 +1,6 @@
 module Rack module Throttle
   ##
-  # Rate limiter middleware for Rack.
+  # This is the base class for rate limiter implementations.
   class Limiter
     attr_reader :app
     attr_reader :options
@@ -15,29 +15,28 @@ module Rack module Throttle
     ##
     # @param  [Hash{String => String}] env
     # @return [Array(Integer, Hash, #each)]
+    # @see    http://rack.rubyforge.org/doc/SPEC.html
     def call(env)
-      if match?(request = Rack::Request.new(env))
-        rate_limit_exceeded
-      else
-        app.call(env)
-      end
+      request = Rack::Request.new(env)
+      allowed?(request) ? app.call(env) : rate_limit_exceeded
     end
 
     ##
-    # Returns `true` if the rate limit has been exceeded for the given
-    # `request`.
+    # Returns `false` if the rate limit has been exceeded for the given
+    # `request`, or `true` otherwise.
+    #
+    # Override this method in subclasses that implement custom rate limiter
+    # strategies.
     #
     # @param  [Rack::Request] request
     # @return [Boolean]
-    def match?(request)
+    def allowed?(request)
       case
-        when blacklisted?(request) then true
-        when whitelisted?(request) then false
-        else false # TODO
+        when whitelisted?(request) then true
+        when blacklisted?(request) then false
+        else true # override in subclasses
       end
     end
-
-    alias_method :match, :match?
 
     ##
     # Returns `true` if the originator of the given `request` is whitelisted
@@ -69,6 +68,66 @@ module Rack module Throttle
     end
 
     protected
+
+    ##
+    # @return [Hash]
+    def cache
+      @options[:cache] ||= {}
+    end
+
+    ##
+    # @param  [String] key
+    def cache_has?(key)
+      cache.has_key?(key)
+    end
+
+    ##
+    # @param  [String] key
+    # @return [Object]
+    def cache_get(key)
+      cache[key]
+    end
+
+    ##
+    # @param  [String] key
+    # @param  [Object] value
+    # @return [void]
+    def cache_set(key, value)
+      cache[key] = value
+    end
+
+    ##
+    # @param  [Rack::Request] request
+    # @return [String]
+    def cache_key(request)
+      id = client_identifier(request)
+      case
+        when options.has_key?(:key)
+          options[:key].call(request)
+        when options.has_key?(:key_prefix)
+          [options[:key_prefix], id].join(':')
+        else id
+      end
+    end
+
+    ##
+    # @param  [Rack::Request] request
+    # @return [String]
+    def client_identifier(request)
+      request.ip.to_s
+    end
+
+    ##
+    # @param  [Rack::Request] request
+    # @return [Float]
+    def request_start_time(request)
+      case
+        when request.env.has_key?('HTTP_X_REQUEST_START')
+          request.env['HTTP_X_REQUEST_START'].to_f / 1000
+        else
+          Time.now.to_f
+      end
+    end
 
     ##
     # Outputs a `Rate Limit Exceeded` error.
