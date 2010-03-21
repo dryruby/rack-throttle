@@ -11,10 +11,10 @@ module Rack module Throttle
     # @param  [Rack::Request] request
     # @return [Boolean]
     def allowed?(request)
-      time    = request_start_time(request)
-      key     = cache_key(request)
-      allowed = !cache_has?(key) || (time - cache_get(key).to_f) >= minimum_interval
-      cache_set(key, time)
+      t1 = request_start_time(request)
+      t0 = cache_get(key = cache_key(request))
+      allowed = !t0 || (t1 - t0.to_f) >= minimum_interval
+      cache_set(key, t1)
       allowed
     end
 

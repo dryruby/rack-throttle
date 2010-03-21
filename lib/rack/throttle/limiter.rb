@@ -78,14 +78,25 @@ module Rack module Throttle
     ##
     # @param  [String] key
     def cache_has?(key)
-      cache.has_key?(key)
+      case
+        when cache.respond_to?(:has_key?)
+          cache.has_key?(key)
+        when cache.respond_to?(:get)
+          cache.get(key) rescue false
+        else false
+      end
     end
 
     ##
     # @param  [String] key
     # @return [Object]
-    def cache_get(key)
-      cache[key]
+    def cache_get(key, default = nil)
+      case
+        when cache.respond_to?(:[])
+          (cache[key] || default) rescue default
+        when cache.respond_to?(:get)
+          (cache.get(key) || default) rescue default
+      end
     end
 
     ##
@@ -93,7 +104,12 @@ module Rack module Throttle
     # @param  [Object] value
     # @return [void]
     def cache_set(key, value)
-      cache[key] = value
+      case
+        when cache.respond_to?(:[]=)
+          cache[key] = value
+        when cache.respond_to?(:set)
+          cache.set(key, value)
+      end
     end
 
     ##
