@@ -10,12 +10,14 @@ Sinatra.
 
 Features
 --------
+
 * Throttles a Rack application by enforcing a minimum interval (by default,
   1 second) between subsequent HTTP requests from a particular client.
 * Compatible with any Rack application and any Rack-based framework.
 * Stores rate-limiting counters in any key/value store implementation that
   responds to `#[]`/`#[]=` (like Ruby's hashes) or to `#get`/`#set` (like
   memcached or Redis).
+* Compatible with the [gdbm][] binding included in Ruby's standard library.
 * Compatible with the [memcached][], [memcache-client][], [memcache][] and
   [redis][] gems.
 * Compatible with [Heroku][]'s [memcached add-on][Heroku memcache]
@@ -35,6 +37,11 @@ Examples
 ### Enforcing a 3-second interval between requests
 
     use Rack::Throttle::Interval, :min => 3.0
+
+### Using GDBM to store rate-limiting counters
+
+    require 'gdbm'
+    use Rack::Throttle::Interval, :cache => GDBM.new('tmp/throttle.db')
 
 ### Using Memcached to store rate-limiting counters
 
@@ -134,6 +141,7 @@ License
 information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 
 [Rack]:            http://rack.rubyforge.org/
+[gdbm]:            http://ruby-doc.org/stdlib/libdoc/gdbm/rdoc/classes/GDBM.html
 [memcached]:       http://rubygems.org/gems/memcached
 [memcache-client]: http://rubygems.org/gems/memcache-client
 [memcache]:        http://rubygems.org/gems/memcache

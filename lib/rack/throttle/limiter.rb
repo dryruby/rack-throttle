@@ -122,7 +122,16 @@ module Rack; module Throttle
     def cache_set(key, value)
       case
         when cache.respond_to?(:[]=)
-          cache[key] = value
+          begin
+            cache[key] = value
+          rescue TypeError => e
+            # GDBM throws a "TypeError: can't convert Float into String"
+            # exception when trying to store a Float. On the other hand, we
+            # don't want to unnecessarily coerce the value to a String for
+            # any stores that do support other data types (e.g. in-memory
+            # hash objects). So, this is a compromise.
+            cache[key] = value.to_s
+          end
         when cache.respond_to?(:set)
           cache.set(key, value)
       end
