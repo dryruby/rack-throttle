@@ -5,6 +5,14 @@ module Rack; module Throttle
   # requests.
   class Interval < Limiter
     ##
+    # @param  [#call]                  app
+    # @param  [Hash{Symbol => Object}] options
+    # @option options [Float] :min     (1.0)
+    def initialize(app, options = {})
+      super
+    end
+
+    ##
     # Returns `true` if sufficient time (equal to or more than
     # {#minimum_interval}) has passed since the last request and the given
     # present `request`.

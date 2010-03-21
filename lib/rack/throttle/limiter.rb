@@ -6,8 +6,12 @@ module Rack; module Throttle
     attr_reader :options
 
     ##
-    # @param  [#call]                  app
-    # @param  [Hash{Symbol => Object}] options
+    # @param  [#call]                      app
+    # @param  [Hash{Symbol => Object}]     options
+    # @option options [String] :cache      (Hash.new)
+    # @option options [String] :key        (nil)
+    # @option options [String] :key_prefix (nil)
+    # @option options [String] :message    ("Rate Limit Exceeded")
     def initialize(app, options = {})
       @app, @options = app, options
     end
