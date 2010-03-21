@@ -29,7 +29,7 @@ module Rack; module Throttle
     def allowed?(request)
       t1 = request_start_time(request)
       t0 = cache_get(key = cache_key(request)) rescue nil
-      allowed = !t0 || (t1 - t0.to_f) >= minimum_interval
+      allowed = !t0 || (dt = t1 - t0.to_f) >= minimum_interval
       begin
         cache_set(key, t1)
         allowed
@@ -40,6 +40,15 @@ module Rack; module Throttle
         # backend cache server (Memcached, Redis, etc.) being offline.
         allowed = true
       end
+    end
+
+    ##
+    # Returns the number of seconds before the client is allowed to retry an
+    # HTTP request.
+    #
+    # @return [Float]
+    def retry_after
+      minimum_interval
     end
 
     ##
