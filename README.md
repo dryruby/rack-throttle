@@ -6,6 +6,23 @@ rate-limiting incoming HTTP requests to your Rack application.
 
 * <http://github.com/datagraph/rack-throttle>
 
+Examples
+--------
+
+    require 'rack/throttle'
+
+### Enforcing a 3-second delay between requests
+
+    use Rack::Throttle::Interval, :min => 3.0
+
+    run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
+
+### Using a Memcached server to store rate-limiting counters
+
+    use Rack::Throttle::Interval, :min => 3.0, :cache => Memcached.new
+
+    run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
+
 Documentation
 -------------
 
