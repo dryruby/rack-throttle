@@ -9,7 +9,7 @@ GEMSPEC = Gem::Specification.new do |gem|
   gem.homepage           = 'http://github.com/datagraph'
   gem.license            = 'Public Domain' if gem.respond_to?(:license=)
   gem.summary            = 'Rate limiter for Rack.'
-  gem.description        = 'Rack middleware for rate-limiting HTTP requests.'
+  gem.description        = 'Rack middleware for rate-limiting incoming HTTP requests.'
   gem.rubyforge_project  = 'datagraph'
 
   gem.authors            = ['Arto Bendiken']
