@@ -8,10 +8,11 @@ module Rack; module Throttle
     ##
     # @param  [#call]                      app
     # @param  [Hash{Symbol => Object}]     options
-    # @option options [String] :cache      (Hash.new)
-    # @option options [String] :key        (nil)
-    # @option options [String] :key_prefix (nil)
-    # @option options [String] :message    ("Rate Limit Exceeded")
+    # @option options [String]  :cache      (Hash.new)
+    # @option options [String]  :key        (nil)
+    # @option options [String]  :key_prefix (nil)
+    # @option options [Integer] :code       (403)
+    # @option options [String]  :message    ("Rate Limit Exceeded")
     def initialize(app, options = {})
       @app, @options = app, options
     end
@@ -155,18 +156,12 @@ module Rack; module Throttle
     ##
     # Outputs a `Rate Limit Exceeded` error.
     #
+    # @param  [Integer] code
+    # @param  [String]  message
     # @return [Array(Integer, Hash, #each)]
-    def rate_limit_exceeded
-      forbidden(options[:message] || 'Rate Limit Exceeded')
-    end
-
-    ##
-    # Outputs an HTTP `403 Forbidden` response.
-    #
-    # @param  [String, #to_s] message
-    # @return [Array(Integer, Hash, #each)]
-    def forbidden(message = nil)
-      http_error(403, message)
+    def rate_limit_exceeded(code = nil, message = nil)
+      http_error(code || options[:code] || 403,
+        message || options[:message] || 'Rate Limit Exceeded')
     end
 
     ##
