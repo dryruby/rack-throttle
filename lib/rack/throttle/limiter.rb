@@ -72,7 +72,10 @@ module Rack module Throttle
     ##
     # @return [Hash]
     def cache
-      @options[:cache] ||= {}
+      case cache = (@options[:cache] ||= {})
+        when Proc then cache.call
+        else cache
+      end
     end
 
     ##
