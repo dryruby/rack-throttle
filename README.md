@@ -18,6 +18,8 @@ Features
   memcached or Redis).
 * Compatible with the [memcached][], [memcache-client][], [memcache][] and
   [redis][] gems.
+* Compatible with [Heroku][]'s [memcached add-on][Heroku memcache]
+  (currently available as a free beta service).
 
 Examples
 --------
@@ -124,3 +126,5 @@ information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 [memcache-client]: http://rubygems.org/gems/memcache-client
 [memcache]:        http://rubygems.org/gems/memcache
 [redis]:           http://rubygems.org/gems/redis
+[Heroku]:          http://heroku.com/
+[Heroku memcache]: http://docs.heroku.com/memcache
