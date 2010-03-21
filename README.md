@@ -1,16 +1,22 @@
-HTTP Request Rate Limiter for Rack
-==================================
+HTTP Request Rate Limiter for Rack Applications
+===============================================
 
 This is [Rack][] middleware that provides logic for rate-limiting incoming
-HTTP requests to your Rack application. You can use `Rack::Throttle` with
-any Ruby web framework based on Rack, including with Ruby on Rails 3.0 and
-with Sinatra.
+HTTP requests to Rack applications. You can use `Rack::Throttle` with any
+Ruby web framework based on Rack, including with Ruby on Rails 3.0 and with
+Sinatra.
 
 * <http://github.com/datagraph/rack-throttle>
 
 Features
 --------
-* Works with the [memcached][], [memcache-client][], [memcache][] and
+* Throttles a Rack application by enforcing a minimum interval (by default,
+  1 second) between subsequent HTTP requests from a particular client.
+* Compatible with any Rack application and any Rack-based framework.
+* Stores rate-limiting counters in any key/value store implementation that
+  responds to `#[]`/`#[]=` (like Ruby's hashes) or to `#get`/`#set` (like
+  memcached or Redis).
+* Compatible with the [memcached][], [memcache-client][], [memcache][] and
   [redis][] gems.
 
 Examples
@@ -37,6 +43,35 @@ Examples
 
     require 'redis'
     use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
+
+HTTP Response Codes and Headers
+-------------------------------
+
+### 403 Forbidden (Rate Limit Exceeded)
+
+When a client exceeds their rate limit, `Rack::Throttle` by default returns
+a "403 Forbidden" response with an associated "Rate Limit Exceeded" message
+in the response body.
+
+An HTTP 403 response means that the server understood the request, but is
+refusing to respond to it and an accompanying message will explain why.
+This indicates an error on the client's part in exceeding the rate limits
+outlined in the acceptable use policy for the site, service, or API.
+
+### 503 Service Unavailable (Rate Limit Exceeded)
+
+However, there is an unfortunately widespread practice of instead returning
+a "503 Service Unavailable" response when a client exceeds the set rate
+limits. This is actually technically incorrect because it indicates an
+error on the server's part, which is certainly not the case with rate
+limiting - it was the client that committed the oops, not the server.
+
+An HTTP 503 response would be correct in situations where the server was
+genuinely overloaded and couldn't handle more requests, but for rate
+limiting an HTTP 403 response is more appropriate. Nonetheless, if you think
+otherwise, `Rack::Throttle` does allow you to override the returned HTTP
+status code by passing in the `:code => 503` option when constructing a
+`Rack::Throttle::Limiter` instance.
 
 Documentation
 -------------
