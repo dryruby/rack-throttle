@@ -93,9 +93,9 @@ module Rack module Throttle
     def cache_get(key, default = nil)
       case
         when cache.respond_to?(:[])
-          (cache[key] || default) rescue default
+          cache[key] || default
         when cache.respond_to?(:get)
-          (cache.get(key) || default) rescue default
+          cache.get(key) || default
       end
     end
 

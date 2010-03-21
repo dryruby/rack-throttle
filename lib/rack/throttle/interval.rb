@@ -12,10 +12,18 @@ module Rack module Throttle
     # @return [Boolean]
     def allowed?(request)
       t1 = request_start_time(request)
-      t0 = cache_get(key = cache_key(request))
+      t0 = cache_get(key = cache_key(request)) rescue nil
       allowed = !t0 || (t1 - t0.to_f) >= minimum_interval
-      cache_set(key, t1)
-      allowed
+      begin
+        cache_set(key, t1)
+        allowed
+      rescue => e
+        # If an error occurred while trying to update the timestamp stored
+        # in the cache, we will fall back to allowing the request through.
+        # This prevents the Rack application blowing up merely due to a
+        # backend cache server (Memcached, Redis, etc.) being offline.
+        allowed = true
+      end
     end
 
     ##
