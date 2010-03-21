@@ -1,7 +1,8 @@
 module Rack; module Throttle
   ##
-  # This rate limiter strategy throttles by defining a minimum interval (by
-  # default, 1 second) between subsequent allowed HTTP requests.
+  # This rate limiter strategy throttles the application by enforcing a
+  # minimum interval (by default, 1 second) between subsequent allowed HTTP
+  # requests.
   class Interval < Limiter
     ##
     # Returns `true` if sufficient time (equal to or more than
