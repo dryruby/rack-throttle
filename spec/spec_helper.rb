@@ -22,7 +22,7 @@ Spec::Matchers.define :show_allowed_response do
   end
   
   description do
-    "expected the allowed repsonse"
+    "expected the allowed response"
   end 
 end
 
@@ -40,6 +40,6 @@ Spec::Matchers.define :show_throttled_response do
   end
   
   description do
-    "expected the throttled repsonse"
+    "expected the throttled response"
   end 
 end
