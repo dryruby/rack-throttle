@@ -50,9 +50,9 @@ Examples
 
 ### Combining various throttling constraints into one overall policy
 
-    use Rack::Throttle::Interval, :min => 3.0   # seconds
-    use Rack::Throttle::Hourly,   :max => 100   # requests
     use Rack::Throttle::Daily,    :max => 1000  # requests
+    use Rack::Throttle::Hourly,   :max => 100   # requests
+    use Rack::Throttle::Interval, :min => 3.0   # seconds
 
 ### Storing the rate-limiting counters in a GDBM database
 
