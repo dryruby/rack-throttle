@@ -34,23 +34,40 @@ Examples
 
     run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
 
-### Enforcing a 3-second interval between requests
+### Enforcing a minimum 3-second interval between requests
 
     use Rack::Throttle::Interval, :min => 3.0
 
-### Using GDBM to store rate-limiting counters
+### Allowing a maximum of 100 requests per hour
+
+    use Rack::Throttle::Hourly,   :max => 100
+
+### Allowing a maximum of 1,000 requests per day
+
+    use Rack::Throttle::Daily,    :max => 1000
+
+### Combining various throttling constraints into one overall policy
+
+    use Rack::Throttle::Interval, :min => 3.0   # seconds
+    use Rack::Throttle::Hourly,   :max => 100   # requests
+    use Rack::Throttle::Daily,    :max => 1000  # requests
+
+### Storing the rate-limiting counters in a GDBM database
 
     require 'gdbm'
+    
     use Rack::Throttle::Interval, :cache => GDBM.new('tmp/throttle.db')
 
-### Using Memcached to store rate-limiting counters
+### Storing the rate-limiting counters on a Memcached server
 
     require 'memcached'
+    
     use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => :throttle
 
-### Using Redis to store rate-limiting counters
+### Storing the rate-limiting counters on a Redis server
 
     require 'redis'
+    
     use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
 
 HTTP Client Identification
