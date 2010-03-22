@@ -14,8 +14,8 @@ module Rack; module Throttle
     attr_reader :options
 
     ##
-    # @param  [#call]                      app
-    # @param  [Hash{Symbol => Object}]     options
+    # @param  [#call]                       app
+    # @param  [Hash{Symbol => Object}]      options
     # @option options [String]  :cache      (Hash.new)
     # @option options [String]  :key        (nil)
     # @option options [String]  :key_prefix (nil)
@@ -85,7 +85,7 @@ module Rack; module Throttle
     ##
     # @return [Hash]
     def cache
-      case cache = (@options[:cache] ||= {})
+      case cache = (options[:cache] ||= {})
         when Proc then cache.call
         else cache
       end

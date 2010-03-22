@@ -1,7 +1,8 @@
 module Rack; module Throttle
+  ##
   class TimeWindow < Limiter
     ##
-    # Returns `true` if fewer than the max number of requests permitted
+    # Returns `true` if fewer than the maximum number of requests permitted
     # for the current window of time have been made.
     #
     # @param  [Rack::Request] request
