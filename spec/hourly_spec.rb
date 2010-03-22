@@ -7,7 +7,6 @@ end
 
 describe Rack::Throttle::Hourly do
   include Rack::Test::Methods
-  include Webrat::Matchers
 
   it "should be allowed if not seen this hour" do
     get "/foo"

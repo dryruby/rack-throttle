@@ -7,7 +7,6 @@ end
 
 describe Rack::Throttle::Interval do
   include Rack::Test::Methods
-  include Webrat::Matchers
   
   it "should allow the request if the source has not been seen" do
     get "/foo"

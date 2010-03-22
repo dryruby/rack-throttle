@@ -7,7 +7,6 @@ end
 
 describe Rack::Throttle::Daily do
   include Rack::Test::Methods
-  include Webrat::Matchers
 
   it "should be allowed if not seen this day" do
     get "/foo"

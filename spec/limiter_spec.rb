@@ -7,7 +7,6 @@ end
 
 describe Rack::Throttle::Limiter do
   include Rack::Test::Methods
-  include Webrat::Matchers
   
   describe "basic calling" do
     it "should return the example app" do

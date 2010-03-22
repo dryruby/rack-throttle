@@ -1,7 +1,6 @@
 require "spec"
 require "rack/test"
 require "rack/throttle"
-require "webrat"
 
 def example_target_app
   @target_app ||= mock("Example Rack App")
