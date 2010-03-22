@@ -11,8 +11,10 @@ Sinatra.
 Features
 --------
 
-* Throttles a Rack application by enforcing a minimum interval (by default,
-  1 second) between subsequent HTTP requests from a particular client.
+* Throttles a Rack application by enforcing a minimum time interval between
+  subsequent HTTP requests from a particular client, as well as by defining
+  a maximum number of allowed HTTP requests per a given time period (hourly
+  or daily).
 * Compatible with any Rack application and any Rack-based framework.
 * Stores rate-limiting counters in any key/value store implementation that
   responds to `#[]`/`#[]=` (like Ruby's hashes) or to `#get`/`#set` (like
@@ -70,6 +72,29 @@ Examples
     
     use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
 
+Throttling Strategies
+---------------------
+
+`Rack::Throttle` supports three built-in throttling strategies:
+
+* `Rack::Throttle::Interval`: Throttles the application by enforcing a
+  minimum interval (by default, 1 second) between subsequent HTTP requests.
+* `Rack::Throttle::Hourly`: Throttles the application by defining a
+  maximum number of allowed HTTP requests per hour (by default, 3,600
+  requests per 60 minutes, which works out to an average of 1 request per
+  second).
+* `Rack::Throttle::Daily`: Throttles the application by defining a
+  maximum number of allowed HTTP requests per day (by default, 86,400
+  requests per 24 hours, which works out to an average of 1 request per
+  second).
+
+You can fully customize the implementation details of any of these strategies
+by simply subclassing one of the aforementioned default implementations.
+And, of course, should your application-specific requirements be
+significantly more complex than what we've provided for, you can also define
+entirely new kinds of throttling strategies by subclassing the
+`Rack::Throttle::Limiter` base class directly.
+
 HTTP Client Identification
 --------------------------
 
@@ -79,8 +104,8 @@ keyed to unique HTTP clients.
 By default, HTTP clients are uniquely identified by their IP address as
 returned by `Rack::Request#ip`. If you wish to instead use a more granular,
 application-specific identifier such as a session key or a user account
-name, you need only subclass `Rack::Throttle::Interval` and override the
-`#client_identifier` method.
+name, you need only subclass a throttling strategy implementation and
+override the `#client_identifier` method.
 
 HTTP Response Codes and Headers
 -------------------------------
@@ -98,11 +123,11 @@ outlined in the acceptable use policy for the site, service, or API.
 
 ### 503 Service Unavailable (Rate Limit Exceeded)
 
-However, there is an unfortunately widespread practice of instead returning
-a "503 Service Unavailable" response when a client exceeds the set rate
-limits. This is actually technically incorrect because it indicates an
-error on the server's part, which is certainly not the case with rate
-limiting - it was the client that committed the oops, not the server.
+However, there exists a widespread practice of instead returning a "503
+Service Unavailable" response when a client exceeds the set rate limits.
+This is technically dubious because it indicates an error on the server's
+part, which is certainly not the case with rate limiting - it was the client
+that committed the oops, not the server.
 
 An HTTP 503 response would be correct in situations where the server was
 genuinely overloaded and couldn't handle more requests, but for rate
