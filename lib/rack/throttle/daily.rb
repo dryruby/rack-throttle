@@ -15,7 +15,10 @@ module Rack; module Throttle
     alias_method :max_per_window, :max_per_day
     
     protected
-    
+
+    ##
+    # @param  [Rack::Request] request
+    # @return [String]
     def cache_key(request)
       super + "_" + Time.now.strftime("%Y-%m-%d")
     end

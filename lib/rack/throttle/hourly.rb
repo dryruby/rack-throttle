@@ -13,6 +13,9 @@ module Rack; module Throttle
     
     protected
     
+    ##
+    # @param  [Rack::Request] request
+    # @return [String]
     def cache_key(request)
       super + "_" + Time.now.strftime("%Y-%m-%d-%H")
     end
