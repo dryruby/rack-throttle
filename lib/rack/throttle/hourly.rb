@@ -5,8 +5,16 @@ module Rack; module Throttle
   # requests per 60 minutes, which works out to an average of 1 request per
   # second).
   #
-  # _Not yet implemented in the current release._
-  class Hourly < Limiter
-    # TODO
+  class Hourly < TimeWindow
+    def max_per_hour
+      @max_per_hour ||= @options[:max_per_hour] || 3600
+    end
+    alias_method :max_per_window, :max_per_hour
+    
+    protected
+    
+    def cache_key(request)
+      super + "_" + Time.now.strftime("%Y-%m-%d-%H")
+    end
   end
 end; end
