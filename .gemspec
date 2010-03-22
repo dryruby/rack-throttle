@@ -12,7 +12,7 @@ GEMSPEC = Gem::Specification.new do |gem|
   gem.description        = 'Rack middleware for rate-limiting incoming HTTP requests.'
   gem.rubyforge_project  = 'datagraph'
 
-  gem.authors            = ['Arto Bendiken']
+  gem.authors            = ['Arto Bendiken', 'Brendon Murphy']
   gem.email              = 'arto.bendiken@gmail.com'
 
   gem.platform           = Gem::Platform::RUBY

@@ -129,10 +129,11 @@ as follows:
 
     % wget http://github.com/datagraph/rack-throttle/tarball/master
 
-Author
-------
+Authors
+-------
 
 * [Arto Bendiken](mailto:arto.bendiken@gmail.com) - <http://ar.to/>
+* [Brendon Murphy](mailto:disposable.20.xternal@spamourmet.com>) - <http://www.techfreak.net/>
 
 License
 -------
