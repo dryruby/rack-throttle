@@ -28,12 +28,32 @@ Features
 Examples
 --------
 
+### Adding throttling to a Rails 3.x application
+
+    # config/application.rb
+    require 'rack/throttle'
+    
+    class Application < Rails::Application
+      config.middleware.use Rack::Throttle::Interval
+    end
+
+### Adding throttling to a Sinatra application
+
+    #!/usr/bin/env ruby -rubygems
+    require 'sinatra'
+    require 'rack/throttle'
+    
+    use Rack::Throttle::Interval
+    
+    get('/hello') { "Hello, world!\n" }
+
 ### Adding throttling to a Rackup application
 
+    #!/usr/bin/env rackup
     require 'rack/throttle'
-
+    
     use Rack::Throttle::Interval
-
+    
     run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
 
 ### Enforcing a minimum 3-second interval between requests
@@ -154,8 +174,8 @@ Dependencies
 Installation
 ------------
 
-The recommended installation method is via RubyGems. To install the latest
-official release, do:
+The recommended installation method is via [RubyGems](http://rubygems.org/).
+To install the latest official release of the gem, do:
 
     % [sudo] gem install rack-throttle
 
