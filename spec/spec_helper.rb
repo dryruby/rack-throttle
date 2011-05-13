@@ -1,4 +1,6 @@
-require "spec"
+require "rubygems"
+require "bundler/setup"
+
 require "rack/test"
 require "rack/throttle"
 
