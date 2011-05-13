@@ -1,13 +1,13 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-def app
-  @target_app ||= example_target_app
-  @app ||= Rack::Throttle::Limiter.new(@target_app)
-end
-
 describe Rack::Throttle::Limiter do
   include Rack::Test::Methods
   
+  def app
+    @target_app ||= example_target_app
+    @app ||= Rack::Throttle::Limiter.new(@target_app)
+  end
+
   describe "basic calling" do
     it "should return the example app" do
       get "/foo"
