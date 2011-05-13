@@ -13,8 +13,8 @@ Features
 
 * Throttles a Rack application by enforcing a minimum time interval between
   subsequent HTTP requests from a particular client, as well as by defining
-  a maximum number of allowed HTTP requests per a given time period (hourly
-  or daily).
+  a maximum number of allowed HTTP requests per a given time period (per minute, 
+  hourly, or daily).
 * Compatible with any Rack application and any Rack-based framework.
 * Stores rate-limiting counters in any key/value store implementation that
   responds to `#[]`/`#[]=` (like Ruby's hashes) or to `#get`/`#set` (like
@@ -60,6 +60,10 @@ Examples
 
     use Rack::Throttle::Interval, :min => 3.0
 
+### Allowing a maximum of 60 requests per minute
+
+    use Rack::Throttle::Minute,   :max => 60
+
 ### Allowing a maximum of 100 requests per hour
 
     use Rack::Throttle::Hourly,   :max => 100
@@ -72,6 +76,7 @@ Examples
 
     use Rack::Throttle::Daily,    :max => 1000  # requests
     use Rack::Throttle::Hourly,   :max => 100   # requests
+    use Rack::Throttle::Hourly,   :max => 60    # requests
     use Rack::Throttle::Interval, :min => 3.0   # seconds
 
 ### Storing the rate-limiting counters in a GDBM database
