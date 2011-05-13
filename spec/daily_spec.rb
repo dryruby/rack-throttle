@@ -23,5 +23,13 @@ describe Rack::Throttle::Daily do
     last_response.body.should show_throttled_response
   end
   
-  # TODO mess with time travelling and requests to make sure no overlap
+  it "should not count yesterdays requests against today" do
+    Timecop.freeze(Date.today - 1) do
+      4.times { get "/foo" }
+      last_response.body.should show_throttled_response
+    end
+
+    get "/foo"
+    last_response.body.should show_allowed_response
+  end
 end
