@@ -1,4 +1,4 @@
-$:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 require 'rack/throttle'
 
 use Rack::Throttle::Interval, :min => 3.0, :cache => {}
