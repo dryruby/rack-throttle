@@ -5,9 +5,9 @@ require "rack/test"
 require 'timecop'
 require "rack/throttle"
 
-def example_target_app
-  @target_app ||= mock("Example Rack App")
-  @target_app.stub!(:call).and_return([200, {}, "Example App Body"])
+
+Spec::Example::ExampleGroup.instance_eval do
+  let(:target_app) { mock("Example Rack App", :call => [200, {}, "Example App Body"]) }
 end
 
 Spec::Matchers.define :show_allowed_response do

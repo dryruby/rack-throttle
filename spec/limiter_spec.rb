@@ -4,10 +4,7 @@ describe Rack::Throttle::Limiter do
   include Rack::Test::Methods
 
   describe 'with default config' do
-    def app
-      @target_app ||= example_target_app
-      @app ||= Rack::Throttle::Limiter.new(@target_app)
-    end
+    let(:app) { Rack::Throttle::Limiter.new(target_app) }
 
     describe "basic calling" do
       it "should return the example app" do
@@ -51,10 +48,7 @@ describe Rack::Throttle::Limiter do
   end
 
   describe 'with rate_limit_exceeded callback' do
-    def app
-      @target_app ||= example_target_app
-      @app ||= Rack::Throttle::Limiter.new(@target_app, :rate_limit_exceeded_callback => lambda {|request| @app.callback(request) } )
-    end
+    let(:app) { Rack::Throttle::Limiter.new(target_app, :rate_limit_exceeded_callback => lambda {|request| app.callback(request) } ) }
 
     it "should call rate_limit_exceeded_callback w/ request when rate limit exceeded" do
       app.should_receive(:blacklisted?).and_return(true)

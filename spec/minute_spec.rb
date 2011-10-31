@@ -3,10 +3,7 @@ require 'spec_helper'
 describe Rack::Throttle::Hourly do
   include Rack::Test::Methods
 
-  def app
-    @target_app ||= example_target_app
-    @app ||= Rack::Throttle::Minute.new(@target_app, :max_per_minute => 3)
-  end
+  let(:app) { Rack::Throttle::Minute.new(target_app, :max_per_minute => 3) }
 
   it "should be allowed if not seen this hour" do
     get "/foo"

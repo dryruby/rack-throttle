@@ -3,10 +3,7 @@ require 'spec_helper'
 describe Rack::Throttle::Daily do
   include Rack::Test::Methods
 
-  def app
-    @target_app ||= example_target_app
-    @app ||= Rack::Throttle::Daily.new(@target_app, :max_per_day => 3)
-  end
+  let(:app) { Rack::Throttle::Daily.new(target_app, :max_per_day => 3) }
 
   it "should be allowed if not seen this day" do
     get "/foo"

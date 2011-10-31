@@ -3,10 +3,7 @@ require 'spec_helper'
 describe Rack::Throttle::Interval do
   include Rack::Test::Methods
   
-  def app
-    @target_app ||= example_target_app
-    @app ||= Rack::Throttle::Interval.new(@target_app, :min => 0.1)
-  end
+  let(:app) { Rack::Throttle::Interval.new(target_app, :min => 0.1) }
 
   it "should allow the request if the source has not been seen" do
     get "/foo"
