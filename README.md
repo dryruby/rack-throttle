@@ -24,6 +24,7 @@ Features
   [redis][] gems.
 * Compatible with [Heroku][]'s [memcached add-on][Heroku memcache]
   (currently available as a free beta service).
+* Compatible with Ruby 1.8.7 & 1.9
 
 Examples
 --------
