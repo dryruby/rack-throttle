@@ -1,9 +1,13 @@
 #!/usr/bin/env ruby -rubygems
 # -*- encoding: utf-8 -*-
 
+$: << File.dirname(__FILE__) + "/lib"
+
+require 'rack/throttle/version'
+
 Gem::Specification.new do |gem|
-  gem.version            = File.read('VERSION').chomp
-  gem.date               = File.mtime('VERSION').strftime('%Y-%m-%d')
+  gem.version            = Rack::Throttle::VERSION.to_s
+  gem.date               = Date.today.to_s
 
   gem.name               = 'rack-throttle'
   gem.homepage           = 'http://github.com/datagraph'
@@ -16,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.email              = 'arto.bendiken@gmail.com'
 
   gem.platform           = Gem::Platform::RUBY
-  gem.files              = %w(AUTHORS README UNLICENSE VERSION) + Dir.glob('lib/**/*.rb')
+  gem.files              = %w(AUTHORS README UNLICENSE) + Dir.glob('lib/**/*.rb')
   gem.bindir             = %q(bin)
   gem.executables        = %w()
   gem.default_executable = gem.executables.first
