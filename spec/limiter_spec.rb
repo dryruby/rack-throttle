@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
+require 'spec_helper'
 
 describe Rack::Throttle::Limiter do
   include Rack::Test::Methods
