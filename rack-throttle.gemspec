@@ -9,8 +9,8 @@ Gem::Specification.new do |gem|
   gem.version            = Rack::Throttle::VERSION.to_s
   gem.date               = Date.today.to_s
 
-  gem.name               = 'rack-throttle'
-  gem.homepage           = 'http://github.com/datagraph'
+  gem.name               = 'viximo-rack-throttle'
+  gem.homepage           = 'http://github.com/Viximo/rack-throttle'
   gem.license            = 'Public Domain' if gem.respond_to?(:license=)
   gem.summary            = 'HTTP request rate limiter for Rack applications.'
   gem.description        = 'Rack middleware for rate-limiting incoming HTTP requests.'
