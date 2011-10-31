@@ -5,4 +5,4 @@ require 'redis'
 
 use Rack::Throttle::Interval, :min => 3.0, :cache => Redis.new
 
-run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
+run lambda { |env| [200, {'Content-Type' => 'text/plain'}, ["Hello, world!\n"]] }
