@@ -105,6 +105,10 @@ Throttling Strategies
 
 * `Rack::Throttle::Interval`: Throttles the application by enforcing a
   minimum interval (by default, 1 second) between subsequent HTTP requests.
+* `Rack::Throttle::Minute`: Throttles the application by defining a
+  maximum number of allowed HTTP requests per minute (by default, 60
+  requests per minute, which works out to an average of 1 request per
+  second).
 * `Rack::Throttle::Hourly`: Throttles the application by defining a
   maximum number of allowed HTTP requests per hour (by default, 3,600
   requests per 60 minutes, which works out to an average of 1 request per
