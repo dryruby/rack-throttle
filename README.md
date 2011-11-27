@@ -76,7 +76,7 @@ Examples
 
     use Rack::Throttle::Daily,    :max => 1000  # requests
     use Rack::Throttle::Hourly,   :max => 100   # requests
-    use Rack::Throttle::Hourly,   :max => 60    # requests
+    use Rack::Throttle::Minute,   :max => 60    # requests
     use Rack::Throttle::Interval, :min => 3.0   # seconds
 
 ### Storing the rate-limiting counters in a GDBM database
