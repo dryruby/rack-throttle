@@ -28,13 +28,13 @@ describe Rack::Throttle::Limiter do
   end
   
   describe "allowed?" do
-    it "should return true if whitelisted" do
+    it "should always return true if whitelisted" do
       app.should_receive(:whitelisted?).and_return(true)
       get "/foo"
       last_response.body.should show_allowed_response
     end
     
-    it "should return false if blacklisted" do
+    it "should always return false if blacklisted" do
       app.should_receive(:blacklisted?).and_return(true)
       get "/foo"
       last_response.body.should show_throttled_response
@@ -47,4 +47,14 @@ describe Rack::Throttle::Limiter do
       last_response.body.should show_allowed_response
     end
   end
+  
+  context "limit exceeded" do
+    it "should return status 429 (Too Many Requests)" do
+      app.should_receive(:allowed?).and_return(false)
+      get "/foo"
+      last_response.status.should == 429
+    end
+    
+  end
+  
 end

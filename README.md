@@ -130,31 +130,12 @@ override the `#client_identifier` method.
 HTTP Response Codes and Headers
 -------------------------------
 
-### 403 Forbidden (Rate Limit Exceeded)
+In the past, various HTTP status codes has been used, but in 2012, the IETF 
+standardized on a new response status "429 Too Many Requests" [RFC6585]
 
 When a client exceeds their rate limit, `Rack::Throttle` by default returns
-a "403 Forbidden" response with an associated "Rate Limit Exceeded" message
+a "429 Too Many Requests" header with an associated "Rate Limit Exceeded" message
 in the response body.
-
-An HTTP 403 response means that the server understood the request, but is
-refusing to respond to it and an accompanying message will explain why.
-This indicates an error on the client's part in exceeding the rate limits
-outlined in the acceptable use policy for the site, service, or API.
-
-### 503 Service Unavailable (Rate Limit Exceeded)
-
-However, there exists a widespread practice of instead returning a "503
-Service Unavailable" response when a client exceeds the set rate limits.
-This is technically dubious because it indicates an error on the server's
-part, which is certainly not the case with rate limiting - it was the client
-that committed the oops, not the server.
-
-An HTTP 503 response would be correct in situations where the server was
-genuinely overloaded and couldn't handle more requests, but for rate
-limiting an HTTP 403 response is more appropriate. Nonetheless, if you think
-otherwise, `Rack::Throttle` does allow you to override the returned HTTP
-status code by passing in a `:code => 503` option when constructing a
-`Rack::Throttle::Limiter` instance.
 
 Documentation
 -------------
@@ -211,3 +192,4 @@ information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 [redis]:           http://rubygems.org/gems/redis
 [Heroku]:          http://heroku.com/
 [Heroku memcache]: http://docs.heroku.com/memcache
+[RFC6585]:         http://tools.ietf.org/html/rfc6585

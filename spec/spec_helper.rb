@@ -1,13 +1,13 @@
-require "spec"
+require "rspec"
 require "rack/test"
 require "rack/throttle"
 
 def example_target_app
   @target_app ||= mock("Example Rack App")
-  @target_app.stub!(:call).and_return([200, {}, "Example App Body"])
+  @target_app.stub!(:call).and_return([200, {}, ["Example App Body"] ])
 end
 
-Spec::Matchers.define :show_allowed_response do
+RSpec::Matchers.define :show_allowed_response do
   match do |body|
     body.include?("Example App Body")
   end
@@ -25,7 +25,7 @@ Spec::Matchers.define :show_allowed_response do
   end 
 end
 
-Spec::Matchers.define :show_throttled_response do
+RSpec::Matchers.define :show_throttled_response do
   match do |body|
     body.include?("Rate Limit Exceeded")
   end
