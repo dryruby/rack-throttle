@@ -1,13 +1,16 @@
-require "rspec"
+require "rubygems"
+require "bundler/setup"
+
 require "rack/test"
+require 'timecop'
 require "rack/throttle"
 
-def example_target_app
-  @target_app ||= mock("Example Rack App")
-  @target_app.stub!(:call).and_return([200, {}, ["Example App Body"] ])
+
+Spec::Example::ExampleGroup.instance_eval do
+  let(:target_app) { mock("Example Rack App", :call => [200, {}, "Example App Body"]) }
 end
 
-RSpec::Matchers.define :show_allowed_response do
+Spec::Matchers.define :show_allowed_response do
   match do |body|
     body.include?("Example App Body")
   end
@@ -25,7 +28,7 @@ RSpec::Matchers.define :show_allowed_response do
   end 
 end
 
-RSpec::Matchers.define :show_throttled_response do
+Spec::Matchers.define :show_throttled_response do
   match do |body|
     body.include?("Rate Limit Exceeded")
   end

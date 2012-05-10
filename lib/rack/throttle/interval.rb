@@ -27,11 +27,11 @@ module Rack; module Throttle
     # @param  [Rack::Request] request
     # @return [Boolean]
     def allowed?(request)
-      t1 = request_start_time(request)
-      t0 = cache_get(key = cache_key(request)) rescue nil
-      allowed = !t0 || (dt = t1 - t0.to_f) >= minimum_interval
+      start_time = request_start_time(request)
+      last_call_time = cache_get(key = cache_key(request)) rescue nil
+      allowed = !last_call_time || (dt = start_time - last_call_time.to_f) >= minimum_interval
       begin
-        cache_set(key, t1)
+        cache_set(key, start_time)
         allowed
       rescue => e
         # If an error occurred while trying to update the timestamp stored

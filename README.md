@@ -13,8 +13,8 @@ Features
 
 * Throttles a Rack application by enforcing a minimum time interval between
   subsequent HTTP requests from a particular client, as well as by defining
-  a maximum number of allowed HTTP requests per a given time period (hourly
-  or daily).
+  a maximum number of allowed HTTP requests per a given time period (per minute, 
+  hourly, or daily).
 * Compatible with any Rack application and any Rack-based framework.
 * Stores rate-limiting counters in any key/value store implementation that
   responds to `#[]`/`#[]=` (like Ruby's hashes) or to `#get`/`#set` (like
@@ -24,6 +24,7 @@ Features
   [redis][] gems.
 * Compatible with [Heroku][]'s [memcached add-on][Heroku memcache]
   (currently available as a free beta service).
+* Compatible with Ruby 1.8.7 & 1.9
 
 Examples
 --------
@@ -60,6 +61,10 @@ Examples
 
     use Rack::Throttle::Interval, :min => 3.0
 
+### Allowing a maximum of 60 requests per minute
+
+    use Rack::Throttle::Minute,   :max => 60
+
 ### Allowing a maximum of 100 requests per hour
 
     use Rack::Throttle::Hourly,   :max => 100
@@ -72,6 +77,7 @@ Examples
 
     use Rack::Throttle::Daily,    :max => 1000  # requests
     use Rack::Throttle::Hourly,   :max => 100   # requests
+    use Rack::Throttle::Hourly,   :max => 60    # requests
     use Rack::Throttle::Interval, :min => 3.0   # seconds
 
 ### Storing the rate-limiting counters in a GDBM database
@@ -99,6 +105,10 @@ Throttling Strategies
 
 * `Rack::Throttle::Interval`: Throttles the application by enforcing a
   minimum interval (by default, 1 second) between subsequent HTTP requests.
+* `Rack::Throttle::Minute`: Throttles the application by defining a
+  maximum number of allowed HTTP requests per minute (by default, 60
+  requests per minute, which works out to an average of 1 request per
+  second).
 * `Rack::Throttle::Hourly`: Throttles the application by defining a
   maximum number of allowed HTTP requests per hour (by default, 3,600
   requests per 60 minutes, which works out to an average of 1 request per
