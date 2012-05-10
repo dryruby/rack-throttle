@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Rack::Throttle::Hourly do
   include Rack::Test::Methods
 
-  let(:app) { Rack::Throttle::Hourly.new(target_app, :max_per_hour => 3) }
+  let(:app) { Rack::Throttle::Minute.new(target_app, :max_per_minute => 3) }
 
   it "should be allowed if not seen this hour" do
     get "/foo"
@@ -20,9 +20,9 @@ describe Rack::Throttle::Hourly do
     last_response.body.should show_throttled_response
   end
   
-  it "should not count last hours requests against today" do
+  it "should not count last minute's requests against this minute's" do
     one_hour_ago = Time.now
-    Timecop.freeze(DateTime.now - 1/24.0) do
+    Timecop.freeze(DateTime.now - 1/24.0/60.0) do
       4.times { get "/foo" }
       last_response.body.should show_throttled_response
     end
