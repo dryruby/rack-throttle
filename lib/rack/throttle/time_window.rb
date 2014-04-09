@@ -8,6 +8,7 @@ module Rack; module Throttle
     # @param  [Rack::Request] request
     # @return [Boolean]
     def allowed?(request)
+      return true if whitelisted?(request)
       count = cache_get(key = cache_key(request)).to_i + 1 rescue 1
       allowed = count <= max_per_window.to_i
       begin
