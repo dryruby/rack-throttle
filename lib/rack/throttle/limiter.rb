@@ -124,7 +124,7 @@ module Rack; module Throttle
         when cache.respond_to?(:[]=)
           begin
             cache[key] = value
-          rescue TypeError => e
+          rescue TypeError
             # GDBM throws a "TypeError: can't convert Float into String"
             # exception when trying to store a Float. On the other hand, we
             # don't want to unnecessarily coerce the value to a String for
