@@ -162,11 +162,12 @@ module Rack; module Throttle
     # @param  [Rack::Request] request
     # @return [Float]
     def request_start_time(request)
-      case
-        when request.env.has_key?('HTTP_X_REQUEST_START')
-          request.env['HTTP_X_REQUEST_START'].to_f / 1000
-        else
-          Time.now.to_f
+      # Check whether HTTP_X_REQUEST_START or HTTP_X_QUEUE_START exist then parse its value (for
+      # example, when having New Relic in your stack, it's going to be in the "t=\d+" format).
+      if val = (request.env['HTTP_X_REQUEST_START'] || request.env['HTTP_X_QUEUE_START'])
+        val[/(?:^t=)?(\d+)/, 1].to_f / 1000
+      else
+        Time.now.to_f
       end
     end
 
