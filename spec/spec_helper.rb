@@ -1,5 +1,8 @@
-require "spec"
+require "rubygems"
+require "bundler/setup"
+
 require "rack/test"
+require 'timecop'
 require "rack/throttle"
 
 def example_target_app
