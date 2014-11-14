@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-def app
-  @target_app ||= example_target_app
-  @app ||= Rack::Throttle::Daily.new(@target_app, :max_per_day => 3)
-end
-
 describe Rack::Throttle::Daily do
   include Rack::Test::Methods
+
+  def app
+    @target_app ||= example_target_app
+    @app ||= Rack::Throttle::Daily.new(@target_app, :max_per_day => 3)
+  end
 
   it "should be allowed if not seen this day" do
     get "/foo"
@@ -23,5 +23,13 @@ describe Rack::Throttle::Daily do
     last_response.body.should show_throttled_response
   end
   
-  # TODO mess with time travelling and requests to make sure no overlap
+  it "should not count yesterdays requests against today" do
+    Timecop.freeze(Date.today - 1) do
+      4.times { get "/foo" }
+      last_response.body.should show_throttled_response
+    end
+
+    get "/foo"
+    last_response.body.should show_allowed_response
+  end
 end

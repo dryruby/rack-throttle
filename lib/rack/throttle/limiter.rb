@@ -31,7 +31,7 @@ module Rack; module Throttle
     # @see    http://rack.rubyforge.org/doc/SPEC.html
     def call(env)
       request = Rack::Request.new(env)
-      allowed?(request) ? app.call(env) : rate_limit_exceeded
+      allowed?(request) ? app.call(env) : rate_limit_exceeded(request)
     end
 
     ##
@@ -175,7 +175,8 @@ module Rack; module Throttle
     # Outputs a `Rate Limit Exceeded` error.
     #
     # @return [Array(Integer, Hash, #each)]
-    def rate_limit_exceeded
+    def rate_limit_exceeded(request)
+      options[:rate_limit_exceeded_callback].call(request) if options[:rate_limit_exceeded_callback]
       headers = respond_to?(:retry_after) ? {'Retry-After' => retry_after.to_f.ceil.to_s} : {}
       http_error(options[:code] || 403, options[:message] || 'Rate Limit Exceeded', headers)
     end
@@ -188,10 +189,8 @@ module Rack; module Throttle
     # @param  [Hash{String => String}] headers
     # @return [Array(Integer, Hash, #each)]
     def http_error(code, message = nil, headers = {})
-      [ code,
-        { 'Content-Type' => 'text/plain; charset=utf-8' }.merge(headers),
-        Array( http_status(code) + (message.nil? ? "\n" : " (#{message})\n") )
-      ]
+      [code, {'Content-Type' => 'text/plain; charset=utf-8'}.merge(headers),
+        [http_status(code), (message.nil? ? "\n" : " (#{message})\n")]]
     end
 
     ##
