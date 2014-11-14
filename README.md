@@ -3,10 +3,10 @@ HTTP Request Rate Limiter for Rack Applications
 
 This is [Rack][] middleware that provides logic for rate-limiting incoming
 HTTP requests to Rack applications. You can use `Rack::Throttle` with any
-Ruby web framework based on Rack, including with Ruby on Rails 3.0 and with
+Ruby web framework based on Rack, including with Ruby on Rails and with
 Sinatra.
 
-* <http://github.com/datagraph/rack-throttle>
+* <https://github.com/bendiken/rack-throttle>
 
 Features
 --------
@@ -28,7 +28,7 @@ Features
 Examples
 --------
 
-### Adding throttling to a Rails 3.x application
+### Adding throttling to a Rails application
 
     # config/application.rb
     require 'rack/throttle'
@@ -161,16 +161,6 @@ otherwise, `Rack::Throttle` does allow you to override the returned HTTP
 status code by passing in a `:code => 503` option when constructing a
 `Rack::Throttle::Limiter` instance.
 
-Documentation
--------------
-
-<http://datagraph.rubyforge.org/rack-throttle/>
-
-* {Rack::Throttle}
-  * {Rack::Throttle::Interval}
-  * {Rack::Throttle::Daily}
-  * {Rack::Throttle::Hourly}
-
 Dependencies
 ------------
 
@@ -184,29 +174,42 @@ To install the latest official release of the gem, do:
 
     % [sudo] gem install rack-throttle
 
-Download
---------
-
-To get a local working copy of the development repository, do:
-
-    % git clone git://github.com/datagraph/rack-throttle.git
-
-Alternatively, you can download the latest development version as a tarball
-as follows:
-
-    % wget http://github.com/datagraph/rack-throttle/tarball/master
-
 Authors
 -------
 
-* [Arto Bendiken](mailto:arto.bendiken@gmail.com) - <http://ar.to/>
-* [Brendon Murphy](mailto:disposable.20.xternal@spamourmet.com>) - <http://www.techfreak.net/>
+* [Arto Bendiken](https://gratipay.com/bendiken) - <http://ar.to/>
+
+Contributors
+------------
+
+* [Brendon Murphy](https://github.com/bemurphy)
+* [Hendrik Kleinwaechter](https://github.com/hendricius)
+* [Karel Minarik](https://github.com/karmi)
+* [Keita Urashima](https://github.com/ursm)
+* [Leonid Beder](https://github.com/lbeder)
+* [TJ Singleton](https://github.com/tjsingleton)
+* [Winfield Peterson](https://github.com/wpeterson)
+
+Contributing
+------------
+
+* Do your best to adhere to the existing coding conventions and idioms.
+* Don't use hard tabs, and don't leave trailing whitespace on any line.
+  Before committing, run `git diff --check` to make sure of this.
+* Do document every method you add using [YARD][] annotations. Read the
+  [tutorial][YARD-GS] or just look at the existing code for examples.
+* Don't touch the gemspec or `VERSION` files. If you need to change them,
+  do so on your private branch only.
+* Do feel free to add yourself to the `CREDITS` file and the
+  corresponding list in the the `README`. Alphabetical order applies.
+* Don't touch the `AUTHORS` file. If your contributions are significant
+  enough, be assured we will eventually add you in there.
 
 License
 -------
 
-`Rack::Throttle` is free and unencumbered public domain software. For more
-information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
+This is free and unencumbered public domain software. For more information,
+see <http://unlicense.org/> or the accompanying `UNLICENSE` file.
 
 [Rack]:            http://rack.rubyforge.org/
 [gdbm]:            http://ruby-doc.org/stdlib/libdoc/gdbm/rdoc/classes/GDBM.html
@@ -216,3 +219,5 @@ information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 [redis]:           http://rubygems.org/gems/redis
 [Heroku]:          http://heroku.com/
 [Heroku memcache]: http://docs.heroku.com/memcache
+[YARD]:            http://yardoc.org/
+[YARD-GS]:         http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
