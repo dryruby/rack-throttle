@@ -124,7 +124,7 @@ module Rack; module Throttle
         when cache.respond_to?(:[]=)
           begin
             cache[key] = value
-          rescue TypeError => e
+          rescue TypeError
             # GDBM throws a "TypeError: can't convert Float into String"
             # exception when trying to store a Float. On the other hand, we
             # don't want to unnecessarily coerce the value to a String for
@@ -162,11 +162,12 @@ module Rack; module Throttle
     # @param  [Rack::Request] request
     # @return [Float]
     def request_start_time(request)
-      case
-        when request.env.has_key?('HTTP_X_REQUEST_START')
-          request.env['HTTP_X_REQUEST_START'].to_f / 1000
-        else
-          Time.now.to_f
+      # Check whether HTTP_X_REQUEST_START or HTTP_X_QUEUE_START exist and parse its value (for
+      # example, when having nginx in your stack, it's going to be in the "t=\d+" format).
+      if val = (request.env['HTTP_X_REQUEST_START'] || request.env['HTTP_X_QUEUE_START'])
+        val[/(?:^t=)?(\d+)/, 1].to_f / 1000
+      else
+        Time.now.to_f
       end
     end
 
