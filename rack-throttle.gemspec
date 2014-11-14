@@ -6,14 +6,13 @@ Gem::Specification.new do |gem|
   gem.date               = File.mtime('VERSION').strftime('%Y-%m-%d')
 
   gem.name               = 'rack-throttle'
-  gem.homepage           = 'http://github.com/datagraph'
+  gem.homepage           = 'https://github.com/bendiken/rack-throttle'
   gem.license            = 'Public Domain' if gem.respond_to?(:license=)
   gem.summary            = 'HTTP request rate limiter for Rack applications.'
   gem.description        = 'Rack middleware for rate-limiting incoming HTTP requests.'
-  gem.rubyforge_project  = 'datagraph'
 
-  gem.authors            = ['Arto Bendiken', 'Brendon Murphy']
-  gem.email              = 'arto.bendiken@gmail.com'
+  gem.authors            = ['Arto Bendiken']
+  gem.email              = 'arto@bendiken.net'
 
   gem.platform           = Gem::Platform::RUBY
   gem.files              = %w(AUTHORS README UNLICENSE VERSION) + Dir.glob('lib/**/*.rb')
