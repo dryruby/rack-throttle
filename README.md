@@ -60,6 +60,10 @@ Examples
 
     use Rack::Throttle::Interval, :min => 3.0
 
+### Allowing a maximum of 1 request per second
+
+    use Rack::Throttle::Second,   :max => 1
+
 ### Allowing a maximum of 60 requests per minute
 
     use Rack::Throttle::Minute,   :max => 60
@@ -77,6 +81,7 @@ Examples
     use Rack::Throttle::Daily,    :max => 1000  # requests
     use Rack::Throttle::Hourly,   :max => 100   # requests
     use Rack::Throttle::Minute,   :max => 60    # requests
+    use Rack::Throttle::Second,   :max => 1     # requests
     use Rack::Throttle::Interval, :min => 3.0   # seconds
 
 ### Storing the rate-limiting counters in a GDBM database
@@ -100,7 +105,7 @@ Examples
 Throttling Strategies
 ---------------------
 
-`Rack::Throttle` supports three built-in throttling strategies:
+`Rack::Throttle` supports four built-in throttling strategies:
 
 * `Rack::Throttle::Interval`: Throttles the application by enforcing a
   minimum interval (by default, 1 second) between subsequent HTTP requests.
@@ -112,6 +117,13 @@ Throttling Strategies
   maximum number of allowed HTTP requests per day (by default, 86,400
   requests per 24 hours, which works out to an average of 1 request per
   second).
+* `Rack::Throttle::Minute`: Throttles the application by defining a
+  maximum number of allowed HTTP requests per minute (by default, 60
+  requests per 1 minute, which works out to an average of 1 request per
+  second).
+* `Rack::Throttle::Second`: Throttles the application by defining a
+  maximum number of allowed HTTP requests per second (by default, 1 
+  request per second).
 
 You can fully customize the implementation details of any of these strategies
 by simply subclassing one of the aforementioned default implementations.
