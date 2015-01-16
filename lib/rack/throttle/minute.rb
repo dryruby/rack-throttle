@@ -26,7 +26,7 @@ module Rack; module Throttle
 
     ##
     def max_per_minute
-      @max_per_hour ||= options[:max_per_minute] || options[:max] || 60
+      @max_per_minute ||= options[:max_per_minute] || options[:max] || 60
     end
 
     alias_method :max_per_window, :max_per_minute
