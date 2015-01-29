@@ -20,7 +20,8 @@ module Rack; module Throttle
       :sliding_time_window => SLIDING_TIME_WINDOW, 
       :max_per_window => MAX_PER_WINDOW, 
       :banned_secs => BANNED_SECS,
-      :logger => NullLoger.new
+      :logger => NullLoger.new,
+      :throttle => :on
     }
 
     ##
@@ -29,6 +30,7 @@ module Rack; module Throttle
     # @option options [Integer] :sliding_time_window  (5)
     # @option options [Integer] :max_per_window       (10)
     # @option options [Integer] :banned_secs          (60)
+    # @option options [Symbol] :throttle              (:on)
     def initialize(app, options = {})
       options = DEFAULTS.merge(options)
       super
@@ -54,11 +56,11 @@ module Rack; module Throttle
           if client_data["banned"]
             secs_banned = ts - client_data["banned_at"]
             if secs_banned >= @options[:banned_secs]
-              logger.debug "[Rack::Throttle::Burst] cancel_banned: client_identifier=#{key}, after: #{secs_banned}s"
               client_data = {"banned" => false, "calls" => {ts => 1}}
+              logger.info "[Rack::Throttle::Burst] cancel_banned: client_identifier=#{key}, after: #{secs_banned}s"
             else
-              logger.debug "[Rack::Throttle::Burst] still_banned: client_identifier=#{key}, banned: #{secs_banned}s"
               allowed = false
+              logger.info "[Rack::Throttle::Burst] still_banned: client_identifier=#{key}, banned: #{secs_banned}s"
             end
           else
             if client_data["calls"]
@@ -71,16 +73,18 @@ module Rack; module Throttle
             end
             count = client_data["calls"].values.inject{|sum,x| sum + x } 
             allowed = count <= @options[:max_per_window]
-            client_data = {"banned" => true, "banned_at" => ts} unless allowed
+            unless allowed
+              client_data = {"banned" => true, "banned_at" => ts}
+              logger.info "[Rack::Throttle::Burst] rate_limit_exceeded: client_identifier=#{key}, hit_rate: #{count}, user_agent: #{request.env["HTTP_USER_AGENT"]}, path_info: #{request.env["PATH_INFO"]}, script_uri: #{request.env["SCRIPT_URI"]}"
+            end
           end
         else
           client_data = {"banned" => false, "calls" => {ts.to_s => 1}}
         end
 
-        logger.info "[Rack::Throttle::Burst] rate_limit_exceeded: client_identifier=#{key}, hit_rate: #{count}, user_agent: #{request.env["HTTP_USER_AGENT"]}, path_info: #{request.env["PATH_INFO"]}, script_uri: #{request.env["SCRIPT_URI"]}" unless allowed
-        
         cache_set(key, Oj.dump(client_data))
-        allowed
+
+        throttling? ? true : allowed
       rescue => e
         logger.info "Exception:#{client_data.inspect};#{e.backtrace}" rescue nil
         # If an error occurred while trying to update the timestamp stored
@@ -93,6 +97,10 @@ module Rack; module Throttle
 
     def logger
       @options[:logger]
+    end
+
+    def throttling?
+      @options[:throttle] == :on
     end
 
   end
