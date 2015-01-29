@@ -1,12 +1,14 @@
 PATH
   remote: .
   specs:
-    rack-throttle (0.3.0)
+    rack-throttle (0.4.1)
+      oj (= 2.0.13)
       rack (>= 1.0.0)
 
 GEM
   remote: http://rubygems.org/
   specs:
+    oj (2.0.13)
     rack (1.2.2)
     rack-test (0.5.3)
       rack (>= 1.0)

@@ -31,5 +31,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'yard' ,     '>= 0.5.5'
   gem.add_development_dependency 'timecop',   '0.3.4'
   gem.add_runtime_dependency     'rack',      '>= 1.0.0'
+  gem.add_runtime_dependency     'oj',        '2.0.13'
   gem.post_install_message       = nil
 end

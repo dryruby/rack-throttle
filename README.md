@@ -60,6 +60,10 @@ Examples
 
     use Rack::Throttle::Interval, :min => 3.0
 
+### Allowing a maximum of 10 requests per 5 seconds, sliding window and bann for 1 minute
+
+    use Rack::Throttle::Burst,   :sliding_time_window => 5, :max_per_window => 10, :banned_secs => 60
+
 ### Allowing a maximum of 60 requests per minute
 
     use Rack::Throttle::Minute,   :max => 60
