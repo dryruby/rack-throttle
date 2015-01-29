@@ -34,6 +34,7 @@ module Rack; module Throttle
     def initialize(app, options = {})
       options = DEFAULTS.merge(options)
       super
+      logger.debug "[Rack::Throttle::Burst] init_options: #{options.map{|k,v| "#{k}=#{v}"}.join(',')}"
     end
 
     ##
@@ -64,8 +65,6 @@ module Rack; module Throttle
             end
           else
             if client_data["calls"]
-              logger.debug "[Rack::Throttle::Burst] #{client_data["calls"].keys.join(', ')}"
-
               client_data["calls"].delete_if{ |timestamp,call_count| timestamp.to_i < (ts - @options[:sliding_time_window]) }
               client_data["calls"].has_key?(ts.to_s) ? client_data["calls"][ts.to_s] += 1 : client_data["calls"][ts.to_s] = 1
             else
@@ -84,7 +83,7 @@ module Rack; module Throttle
 
         cache_set(key, Oj.dump(client_data))
 
-        throttling? ? true : allowed
+        throttling? ? allowed : true
       rescue => e
         logger.info "Exception:#{client_data.inspect};#{e.backtrace}" rescue nil
         # If an error occurred while trying to update the timestamp stored
