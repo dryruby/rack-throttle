@@ -2,7 +2,7 @@ module Rack; module Throttle
   module VERSION
     MAJOR = 0
     MINOR = 4
-    TINY  = 3
+    TINY  = 4
     EXTRA = nil
 
     STRING = [MAJOR, MINOR, TINY].join('.')

@@ -13,7 +13,7 @@ Features
 
 * Throttles a Rack application by enforcing a minimum time interval between
   subsequent HTTP requests from a particular client, as well as by defining
-  a maximum number of allowed HTTP requests per a given time period (per minute, 
+  a maximum number of allowed HTTP requests per a given time period (per minute,
   hourly, or daily).
 * Compatible with any Rack application and any Rack-based framework.
 * Stores rate-limiting counters in any key/value store implementation that
@@ -32,7 +32,7 @@ Examples
 
     # config/application.rb
     require 'rack/throttle'
-    
+
     class Application < Rails::Application
       config.middleware.use Rack::Throttle::Interval
     end
@@ -42,18 +42,18 @@ Examples
     #!/usr/bin/env ruby -rubygems
     require 'sinatra'
     require 'rack/throttle'
-    
+
     use Rack::Throttle::Interval
-    
+
     get('/hello') { "Hello, world!\n" }
 
 ### Adding throttling to a Rackup application
 
     #!/usr/bin/env rackup
     require 'rack/throttle'
-    
+
     use Rack::Throttle::Interval
-    
+
     run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
 
 ### Enforcing a minimum 3-second interval between requests
@@ -61,8 +61,9 @@ Examples
     use Rack::Throttle::Interval, :min => 3.0
 
 ### Allowing a maximum of 10 requests per 5 seconds, sliding window and bann for 1 minute
+Setting throttle to another value (eg :soft) wil set the state to logging mode. A logger instance must be provided.
 
-    use Rack::Throttle::Burst,   :sliding_time_window => 5, :max_per_window => 10, :banned_secs => 60
+    use Rack::Throttle::Burst, :sliding_time_window => 5, :max_per_window => 10, :banned_secs => 60, :logger => Logger.new, :throttle => :on
 
 ### Allowing a maximum of 60 requests per minute
 
@@ -86,19 +87,19 @@ Examples
 ### Storing the rate-limiting counters in a GDBM database
 
     require 'gdbm'
-    
+
     use Rack::Throttle::Interval, :cache => GDBM.new('tmp/throttle.db')
 
 ### Storing the rate-limiting counters on a Memcached server
 
     require 'memcached'
-    
+
     use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => :throttle
 
 ### Storing the rate-limiting counters on a Redis server
 
     require 'redis'
-    
+
     use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
 
 Throttling Strategies

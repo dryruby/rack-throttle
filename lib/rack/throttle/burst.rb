@@ -17,8 +17,8 @@ module Rack; module Throttle
     BANNED_SECS = 60
 
     DEFAULTS = {
-      :sliding_time_window => SLIDING_TIME_WINDOW, 
-      :max_per_window => MAX_PER_WINDOW, 
+      :sliding_time_window => SLIDING_TIME_WINDOW,
+      :max_per_window => MAX_PER_WINDOW,
       :banned_secs => BANNED_SECS,
       :logger => NullLoger.new,
       :throttle => :on
@@ -61,7 +61,7 @@ module Rack; module Throttle
               logger.info "[Rack::Throttle::Burst] cancel_banned: client_identifier=#{key}, after: #{secs_banned}s"
             else
               allowed = false
-              logger.info "[Rack::Throttle::Burst] still_banned: client_identifier=#{key}, banned: #{secs_banned}s"
+              logger.info "[Rack::Throttle::Burst] still_banned: client_identifier=#{key}, banned: #{secs_banned}s, path_info: #{request.env["PATH_INFO"]}"
             end
           else
             if client_data["calls"]
@@ -70,7 +70,7 @@ module Rack; module Throttle
             else
               client_data = {"banned" => false, "calls" => {ts.to_s => 1}}
             end
-            count = client_data["calls"].values.inject{|sum,x| sum + x } 
+            count = client_data["calls"].values.inject{|sum,x| sum + x }
             allowed = count <= @options[:max_per_window]
             unless allowed
               client_data = {"banned" => true, "banned_at" => ts}
