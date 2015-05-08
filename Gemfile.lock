@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rack-throttle (0.3.0)
+    rack-throttle (0.4.0)
       rack (>= 1.0.0)
 
 GEM
