@@ -8,6 +8,7 @@ module Rack
     autoload :Daily,      'rack/throttle/daily'
     autoload :Hourly,     'rack/throttle/hourly'
     autoload :Minute,     'rack/throttle/minute'
+    autoload :Second,     'rack/throttle/second'
     autoload :VERSION,    'rack/throttle/version'
   end
 end
