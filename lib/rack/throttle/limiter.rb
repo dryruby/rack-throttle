@@ -21,6 +21,7 @@ module Rack; module Throttle
     # @option options [String]  :key_prefix (nil)
     # @option options [Integer] :code       (403)
     # @option options [String]  :message    ("Rate Limit Exceeded")
+    # @option options [String]  :type       ("text/plain; charset=utf-8")
     def initialize(app, options = {})
       @app, @options = app, options
     end
@@ -189,8 +190,12 @@ module Rack; module Throttle
     # @param  [Hash{String => String}] headers
     # @return [Array(Integer, Hash, #each)]
     def http_error(code, message = nil, headers = {})
-      [code, {'Content-Type' => 'text/plain; charset=utf-8'}.merge(headers),
-        [http_status(code), (message.nil? ? "\n" : " (#{message})\n")]]
+      contentType = 'text/plain; charset=utf-8'
+      if options[:type]
+        contentType = options[:type]
+      end
+      [code, {'Content-Type' => contentType}.merge(headers),
+        [message]]
     end
 
     ##

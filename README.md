@@ -1,5 +1,11 @@
-HTTP Request Rate Limiter for Rack Applications
-===============================================
+HTTP Request Rate Limiter for the Vancity Transit API
+=====================================================
+
+This is a fork of [bendiken/rack-throttle](https://github.com/bendiken/rack-throttle) for use exclusively in the Vancity Transit API.  
+The modifications to this module allow for the API to rate limit client  
+requests and provide a custom JSON formatted response.
+
+---
 
 This is [Rack][] middleware that provides logic for rate-limiting incoming
 HTTP requests to Rack applications. You can use `Rack::Throttle` with any
