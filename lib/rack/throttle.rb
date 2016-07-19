@@ -8,6 +8,7 @@ module Rack
     autoload :Daily,      ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/daily'
     autoload :Hourly,     ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/hourly'
     autoload :Minute,     ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/minute'
+    autoload :Second,     ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/second'
     autoload :VERSION,    ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/version'
   end
 end
