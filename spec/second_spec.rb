@@ -22,13 +22,15 @@ describe Rack::Throttle::Second do
     expect(last_response.body).to show_throttled_response
   end
 
-  it "should not count last seconds requests against today" do
-    Timecop.freeze(DateTime.now - 1/24.0/60.0/60.0) do
-      4.times { get "/foo" }
-      expect(last_response.body).to show_throttled_response
-    end
+  [:second_ago, :minute_ago, :hour_ago, :day_ago].each do |time|
+    it "should not count the requests from a #{time.to_s.split('_').join(' ')} against this second" do
+      Timecop.freeze(1.send(time)) do
+        4.times { get "/foo" }
+        expect(last_response.body).to show_throttled_response
+      end
 
-    get "/foo"
-    expect(last_response.body).to show_allowed_response
+      get "/foo"
+      expect(last_response.body).to show_allowed_response
+    end
   end
 end
