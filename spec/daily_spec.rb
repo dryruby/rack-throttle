@@ -22,13 +22,15 @@ describe Rack::Throttle::Daily do
     expect(last_response.body).to show_throttled_response
   end
 
-  it "should not count last days requests against today" do
-    Timecop.freeze(DateTime.now - 1) do
-      4.times { get "/foo" }
-      expect(last_response.body).to show_throttled_response
-    end
+  [:day_ago].each do |time|
+    it "should not count the requests from a #{time.to_s.split('_').join(' ')} against this second" do
+      Timecop.freeze(1.send(time)) do
+        4.times { get "/foo" }
+        expect(last_response.body).to show_throttled_response
+      end
 
-    get "/foo"
-    expect(last_response.body).to show_allowed_response
+      get "/foo"
+      expect(last_response.body).to show_allowed_response
+    end
   end
 end
