@@ -201,6 +201,7 @@ Contributors
 * [Leonid Beder](https://github.com/lbeder)
 * [TJ Singleton](https://github.com/tjsingleton)
 * [Winfield Peterson](https://github.com/wpeterson)
+* [Dean Galvin](https://github.com/freekingdean)
 
 Contributing
 ------------
