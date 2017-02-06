@@ -124,6 +124,9 @@ Throttling Strategies
 * `Rack::Throttle::Second`: Throttles the application by defining a
   maximum number of allowed HTTP requests per second (by default, 1 
   request per second).
+* `Rack::Throttle::MethodAndPath`: Throttles the application by defining
+  different number of allowed HTTP request per second based on the 
+  request method and the request paths, or use a default.
 
 You can fully customize the implementation details of any of these strategies
 by simply subclassing one of the aforementioned default implementations.
@@ -150,6 +153,33 @@ class Rack::Throttle::RequestMethod < Rack::Throttle::Second
   alias_method :max_per_window, :max_per_second
 
 end
+```
+
+Passing the correct options for `MethodAndPath` strategy.
+
+```
+limits = {
+  "methods" => {
+    "POST" => 5,
+    "GET"  => 10
+  },
+  "paths"   => {
+    "/users/.*/profile"       => 3
+    "/users/.*/reset_password => 1
+  },
+  "default" => 10
+}
+
+use Rack::Throttle::MethodAndPath, limits: limits
+```
+
+This configuration would allow a maximum of 3 profile requests per second, 1 reset password requests per second, 5 POST and 10 GET requests per second (allways also based on the IPaddress).
+It is checked in this order: `paths`, `methods`, `default`.
+
+It is possible to set the time window for this strategy to: `:second` (default), `:minute`, `:hour` or `:day`, to change the check interval to these windows.
+
+```
+use Rack::Throttle::MethodAndPath, limits: limits, time_window: :minute
 ```
 
 
