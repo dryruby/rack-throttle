@@ -132,6 +132,27 @@ significantly more complex than what we've provided for, you can also define
 entirely new kinds of throttling strategies by subclassing the
 `Rack::Throttle::Limiter` base class directly.
 
+### Example
+
+Customize the `max_per_second` to be different depending on the request's method.
+
+```
+class Rack::Throttle::RequestMethod < Rack::Throttle::Second
+
+  def max_per_second(request = nil)
+    return (options[:max_per_second] || options[:max] || 1) unless request
+    if request.request_method == "POST"
+      4
+    else
+      10
+    end
+  end
+  alias_method :max_per_window, :max_per_second
+
+end
+```
+
+
 HTTP Client Identification
 --------------------------
 

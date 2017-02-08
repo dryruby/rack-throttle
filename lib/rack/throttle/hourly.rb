@@ -26,7 +26,7 @@ module Rack; module Throttle
     end
 
     ##
-    def max_per_hour
+    def max_per_hour(request = nil)
       @max_per_hour ||= options[:max_per_hour] || options[:max] || 3_600
     end
 
