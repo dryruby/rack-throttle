@@ -32,12 +32,16 @@ module Rack
 
       def client_identifier(request)
         if path_limit(request)
-          "#{request.ip.to_s}_#{request.path}"
+          "#{ip(request)}_#{request.path}"
         elsif method_limit(request)
-          "#{request.ip.to_s}_#{request.request_method}"
+          "#{ip(request)}_#{request.request_method}"
         else
-          request.ip.to_s
+          ip(request)
         end
+      end
+
+      def ip(request)
+        request.ip.to_s
       end
 
       def cache_key(request)
