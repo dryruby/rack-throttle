@@ -12,6 +12,10 @@ module Rack
       def limits
         @limits ||= options[:limits]
       end
+    
+      def retry_after
+        @min ||= (options[:min] || 3600)
+      end
 
       def path_limit(request)
         limits["paths"].find { |k,v| 
