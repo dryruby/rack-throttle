@@ -2,13 +2,13 @@ require 'rack'
 
 module Rack
   module Throttle
-    autoload :Limiter,    ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/limiter'
-    autoload :Interval,   ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/interval'
-    autoload :TimeWindow, ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/time_window'
-    autoload :Daily,      ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/daily'
-    autoload :Hourly,     ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/hourly'
-    autoload :Minute,     ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/minute'
-    autoload :Second,     ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/second'
-    autoload :VERSION,    ::File.expand_path(::File.dirname(__FILE__)) + '/throttle/version'
+    require_relative "throttle/limiter"
+    require_relative "throttle/interval"
+    require_relative "throttle/time_window"
+    require_relative "throttle/daily"
+    require_relative "throttle/hourly"
+    require_relative "throttle/minute"
+    require_relative "throttle/second"
+    require_relative "throttle/version"
   end
 end
