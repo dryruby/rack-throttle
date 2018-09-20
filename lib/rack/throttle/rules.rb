@@ -1,3 +1,5 @@
+require "ipaddr"
+
 module Rack
   module Throttle
     class Rules < TimeWindow
@@ -25,17 +27,17 @@ module Rack
       end
 
       def ips
-        @ips ||= options[:ip_whitelist] || []
+        @ips ||= options[:ip_whitelist].map { |ip| IPAddr.new(ip) } || []
       end
 
       def whitelisted?(request)
-        return true if ip_whitelisted?(ip(request))
+        return true if ip_whitelisted?(IPAddr.new(ip(request)))
         return true if path_whitelisted?(request)
         false
       end
 
       def ip_whitelisted?(request_ip)
-        !!ips.find { |ip| ip.to_s == request_ip.to_s }
+        !!ips.find { |ip| ip.include?(request_ip) }
       end 
 
       def path_whitelisted?(request)
