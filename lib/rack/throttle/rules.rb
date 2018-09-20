@@ -27,7 +27,7 @@ module Rack
       end
 
       def ips
-        @ips ||= options[:ip_whitelist].map { |ip| IPAddr.new(ip) } || []
+        @ips ||= (options[:ip_whitelist] || []).map { |ip| IPAddr.new(ip) } || []
       end
 
       def whitelisted?(request)
