@@ -5,13 +5,23 @@ describe Rack::Throttle::Rules do
 
   include_context 'mock app'
 
+  mybot_check = Proc.new { |request|
+    !!(request.env["HTTP_AGENT"] =~ /mybot/)
+  }
+  
+  somebot_check = Proc.new { |request|
+    !!(request.env["HTTP_AGENT"] =~ /somebot/)
+  }
+
   let(:options) do
     {
       rules: [
         { method: "POST", limit: 5 },
         { method: "GET", limit: 3 },
         { method: "GET", path: "/bar/.*/muh", limit: 5 },
-        { method: "GET", path: "/white/list/me", whitelisted: true }
+        { method: "GET", path: "/white/list/me", whitelisted: true },
+        { method: "GET", proc: somebot_check, limit: 8 },
+        { method: "GET", proc: mybot_check, whitelisted: true }
       ],
       ip_whitelist: [
         "123.123.123.123"
@@ -23,6 +33,21 @@ describe Rack::Throttle::Rules do
   let(:app) { described_class.new(target_app, options) }
  
   describe "allowed" do
+    
+    it "should be allowed if not seen this second" do
+      get "/bar/124/muh", {}, { "HTTP_AGENT" => "mybot" }
+      expect(last_response.body).to show_allowed_response
+    end
+    
+    it "should be allowed if not seen this second" do
+      6.times { get "/bar/124/muh", {}, { "HTTP_AGENT" => "somebot" } }
+      expect(last_response.body).to show_allowed_response
+    end
+    
+    it "should be allowed if not seen this second" do
+      10.times { get "/bar/124/muh", {}, { "HTTP_AGENT" => "mybot" } }
+      expect(last_response.body).to show_allowed_response
+    end
 
     it "should be allowed if not seen this second" do
       allow_any_instance_of(Rack::Throttle::Rules).to receive(:ip).and_return("123.123.123.123")
@@ -104,6 +129,11 @@ describe Rack::Throttle::Rules do
     it "should be allowed if not seen this second" do
       allow_any_instance_of(Rack::Throttle::Rules).to receive(:ip).and_return("1.1.1.1")
       10.times { get "/bar/124/muh" }
+      expect(last_response.body).to show_throttled_response
+    end
+    
+    it "should be allowed if not seen this second" do
+      10.times { get "/bar/124/muh", {}, { "HTTP_AGENT" => "somebot" } }
       expect(last_response.body).to show_throttled_response
     end
 

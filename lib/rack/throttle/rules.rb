@@ -14,7 +14,7 @@ module Rack
       def rules
         @rules ||= begin
           rs = options[:rules]
-          rs.sort_by { |r| r[:path].to_s }.reverse
+          rs.sort_by { |r| [r[:proc].to_s, r[:path].to_s] }.reverse
         end
       end
     
@@ -27,12 +27,12 @@ module Rack
       end
 
       def ips
-        @ips ||= options[:ip_whitelist].map { |ip| IPAddr.new(ip) } || []
+        @ips ||= (options[:ip_whitelist] || []).map { |ip| IPAddr.new(ip) } || []
       end
 
       def whitelisted?(request)
         return true if ip_whitelisted?(IPAddr.new(ip(request)))
-        return true if path_whitelisted?(request)
+        return true if rule_whitelisted?(request)
         false
       end
 
@@ -40,16 +40,20 @@ module Rack
         !!ips.find { |ip| ip.include?(request_ip) }
       end 
 
-      def path_whitelisted?(request)
+      def rule_whitelisted?(request)
         rule = rule_for(request)
         rule ? rule[:whitelisted] : false
       end
 
       def rule_for(request)
-        rules.find do |rule|
-          next unless rule[:method] == request.request_method.to_s
-          next unless path_matches?(rule, request.path.to_s)
-          rule
+        cache.fetch("rule-#{request.object_id}") do 
+          r = rules.find do |rule|
+            next unless rule[:method] == request.request_method.to_s
+            next if rule[:proc] && rule[:proc].call(request) == false
+            next if rule[:path] && !path_matches?(rule, request.path.to_s)
+            rule
+          end
+          cache.store("rule-#{request.object_id}", r)
         end
       end
 
