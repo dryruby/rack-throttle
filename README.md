@@ -124,6 +124,9 @@ Throttling Strategies
 * `Rack::Throttle::Second`: Throttles the application by defining a
   maximum number of allowed HTTP requests per second (by default, 1 
   request per second).
+* `Rack::Throttle::Rules`: Throttles the application by defining
+  different rules of allowed HTTP request per time_window based on the 
+  request method and the request paths, or use a default.
 
 You can fully customize the implementation details of any of these strategies
 by simply subclassing one of the aforementioned default implementations.
@@ -150,6 +153,43 @@ class Rack::Throttle::RequestMethod < Rack::Throttle::Second
   alias_method :max_per_window, :max_per_second
 
 end
+```
+
+Passing the correct options for `Rules` strategy.
+
+```
+rules = [
+  { method: "POST", limit: 5 },
+  { method: "GET", limit: 10 },
+  { method: "GET", path: "/users/.*/profile", limit: 3 },
+  { method: "GET", path: "/users/.*/reset_password", limit: 1 }
+  { method: "GET", path: "/external/callback", whitelisted: true }
+]
+ip_whitelist = [
+  "1.2.3.4",
+  "5.6.7.8"
+]
+default = 10
+
+
+use Rack::Throttle::Rules, rules: rules, ip_whitelist: ips, default: default
+```
+
+This configuration would allow a maximum of 3 profile requests per second (default), i
+1 reset password requests per second, 5 POST and 10 GET requests per second 
+(always also based on the IPaddress). Additionally it would whitelist the external callback
+and add a ip-whitelisting for the given ips.
+
+Rules are checked in this order: 
+* ip whitelist
+* rules with `paths`,
+* rules with `methods` only, 
+* `default`.
+
+It is possible to set the time window for this strategy to: `:second` (default), `:minute`, `:hour` or `:day`, to change the check interval to these windows.
+
+```
+use Rack::Throttle::MethodAndPath, limits: limits, time_window: :minute
 ```
 
 
