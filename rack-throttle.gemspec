@@ -35,8 +35,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'timecop'
-  gem.add_development_dependency 'pry'
-  gem.add_development_dependency 'awesome_print'
 
   gem.add_runtime_dependency     'rack',      '>= 1.0.0'
 
