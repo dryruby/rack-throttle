@@ -14,7 +14,7 @@ module Rack
       def rules
         @rules ||= begin
           rs = options[:rules]
-          rs.sort_by { |r| r[:path].to_s }.reverse
+          rs.sort_by { |r| [r[:proc].to_s, r[:path].to_s] }.reverse
         end
       end
     
@@ -32,7 +32,7 @@ module Rack
 
       def whitelisted?(request)
         return true if ip_whitelisted?(IPAddr.new(ip(request)))
-        return true if path_whitelisted?(request)
+        return true if rule_whitelisted?(request)
         false
       end
 
@@ -40,7 +40,7 @@ module Rack
         !!ips.find { |ip| ip.include?(request_ip) }
       end 
 
-      def path_whitelisted?(request)
+      def rule_whitelisted?(request)
         rule = rule_for(request)
         rule ? rule[:whitelisted] : false
       end
@@ -48,7 +48,8 @@ module Rack
       def rule_for(request)
         rules.find do |rule|
           next unless rule[:method] == request.request_method.to_s
-          next unless path_matches?(rule, request.path.to_s)
+          next if rule[:proc] && rule[:proc].call(request) == false
+          next if rule[:path] && !path_matches?(rule, request.path.to_s)
           rule
         end
       end
@@ -66,9 +67,21 @@ module Rack
 
       def client_identifier(request)
         if (rule = rule_for(request)) 
-          "#{ip(request)}_#{rule[:method]}_#{rule[:path]}"
+          client_identifier_for_rule(request, rule)
         else
           ip(request)
+        end
+      end
+          
+      def client_identifier_for_rule(request, rule)
+        if rule[:proc]
+          "#{rule[:method]}_#{rule[:proc].call(request)}"
+        elsif rule[:path]
+          "#{ip(request)}_#{rule[:method]}_#{rule[:path]}"
+        elsif rule[:method]
+          "#{ip(request)}_#{rule[:method]}"
+        else
+          raise NotImplementedError
         end
       end
 
