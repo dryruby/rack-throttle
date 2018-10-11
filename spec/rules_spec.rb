@@ -6,11 +6,11 @@ describe Rack::Throttle::Rules do
   include_context 'mock app'
 
   mybot_check = Proc.new { |request|
-    !!(request.env["HTTP_AGENT"] =~ /mybot/)
+    (request.env["HTTP_AGENT"] =~ /mybot/ ? "mybot" : false)
   }
   
   somebot_check = Proc.new { |request|
-    !!(request.env["HTTP_AGENT"] =~ /somebot/)
+    (request.env["HTTP_AGENT"] =~ /somebot/ ? "somebot" : false)
   }
 
   let(:options) do
