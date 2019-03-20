@@ -172,7 +172,7 @@ ip_whitelist = [
 default = 10
 
 
-use Rack::Throttle::Rules, rules: rules, ip_whitelist: ips, default: default
+use Rack::Throttle::Rules, rules: rules, ip_whitelist: ip_whitelist, default: default
 ```
 
 This configuration would allow a maximum of 3 profile requests per second (default), i
