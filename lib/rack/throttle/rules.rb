@@ -90,11 +90,14 @@ module Rack
       end
 
       def cache_key(request)
-        [super, Time.now.strftime(time_string)].join(':')
+        [super, Time.now.strftime(time_string(request))].join(':')
       end
 
-      def time_string
-        @time_string ||= case options[:time_window]
+      def time_string(request)
+        rule = rule_for(request)
+        window = (rule && rule[:time_window]) || options[:time_window]
+
+        case window
           when :second then '%Y-%m-%dT%H:%M:%S'
           when :minute then '%Y-%m-%dT%H:%M'
           when :hour   then '%Y-%m-%dT%H'

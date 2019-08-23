@@ -20,6 +20,7 @@ describe Rack::Throttle::Rules do
         { method: "GET", limit: 3 },
         { method: "GET", path: "/bar/.*/muh", limit: 5 },
         { method: "GET", path: "/white/list/me", whitelisted: true },
+        { method: "GET", path: "/bar/.*/window", limit: 3, time_window: :minute },
         { method: "GET", proc: somebot_check, limit: 8 },
         { method: "GET", proc: mybot_check, whitelisted: true }
       ],
@@ -89,6 +90,11 @@ describe Rack::Throttle::Rules do
       9.times { put "/foo" }
       expect(last_response.body).to show_allowed_response
     end
+
+    it "should be allowed if seen fewer times than the max allowed per time_window" do
+      get "/bar/124/window"
+      expect(last_response.body).to show_allowed_response
+    end
   
     [:second_ago, :minute_ago, :hour_ago, :day_ago].each do |time|
       it "should not count the requests from a #{time.to_s.split('_').join(' ')} against this second" do
@@ -118,6 +124,16 @@ describe Rack::Throttle::Rules do
     
     it "should not be allowed if seen more times than the default defines" do
       15.times { put "/foo" }
+      expect(last_response.body).to show_throttled_response
+    end
+
+    it "should not be allowed if seen more times than the max allowed per time_window" do
+      Timecop.freeze(Time.now - Time.now.to_i % 60) do
+        4.times { get "/bar/124/window" }
+        expect(last_response.body).to show_throttled_response
+      end
+
+      get "/bar/124/window"
       expect(last_response.body).to show_throttled_response
     end
     
