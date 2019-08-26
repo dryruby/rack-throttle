@@ -13,7 +13,7 @@ Features
 
 * Throttles a Rack application by enforcing a minimum time interval between
   subsequent HTTP requests from a particular client, as well as by defining
-  a maximum number of allowed HTTP requests per a given time period (per minute, 
+  a maximum number of allowed HTTP requests per a given time period (per minute,
   hourly, or daily).
 * Compatible with any Rack application and any Rack-based framework.
 * Stores rate-limiting counters in any key/value store implementation that
@@ -30,77 +30,101 @@ Examples
 
 ### Adding throttling to a Rails application
 
-    # config/application.rb
-    require 'rack/throttle'
-    
-    class Application < Rails::Application
-      config.middleware.use Rack::Throttle::Interval
-    end
+```ruby
+# config/application.rb
+require 'rack/throttle'
+
+class Application < Rails::Application
+  config.middleware.use Rack::Throttle::Interval
+end
+```
 
 ### Adding throttling to a Sinatra application
 
-    #!/usr/bin/env ruby -rubygems
-    require 'sinatra'
-    require 'rack/throttle'
-    
-    use Rack::Throttle::Interval
-    
-    get('/hello') { "Hello, world!\n" }
+```ruby
+#!/usr/bin/env ruby -rubygems
+require 'sinatra'
+require 'rack/throttle'
+
+use Rack::Throttle::Interval
+
+get('/hello') { "Hello, world!\n" }
+```
 
 ### Adding throttling to a Rackup application
 
-    #!/usr/bin/env rackup
-    require 'rack/throttle'
-    
-    use Rack::Throttle::Interval
-    
-    run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
+```ruby
+#!/usr/bin/env rackup
+require 'rack/throttle'
+
+use Rack::Throttle::Interval
+
+run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
+```
 
 ### Enforcing a minimum 3-second interval between requests
 
-    use Rack::Throttle::Interval, :min => 3.0
+```ruby
+use Rack::Throttle::Interval, :min => 3.0
+```
 
 ### Allowing a maximum of 1 request per second
 
-    use Rack::Throttle::Second,   :max => 1
+```ruby
+use Rack::Throttle::Second,   :max => 1
+```
 
 ### Allowing a maximum of 60 requests per minute
 
-    use Rack::Throttle::Minute,   :max => 60
+```ruby
+use Rack::Throttle::Minute,   :max => 60
+```
 
 ### Allowing a maximum of 100 requests per hour
 
-    use Rack::Throttle::Hourly,   :max => 100
+```ruby
+use Rack::Throttle::Hourly,   :max => 100
+```
 
 ### Allowing a maximum of 1,000 requests per day
 
-    use Rack::Throttle::Daily,    :max => 1000
+```ruby
+use Rack::Throttle::Daily,    :max => 1000
+```
 
 ### Combining various throttling constraints into one overall policy
 
-    use Rack::Throttle::Daily,    :max => 1000  # requests
-    use Rack::Throttle::Hourly,   :max => 100   # requests
-    use Rack::Throttle::Minute,   :max => 60    # requests
-    use Rack::Throttle::Second,   :max => 1     # requests
-    use Rack::Throttle::Interval, :min => 3.0   # seconds
+```ruby
+use Rack::Throttle::Daily,    :max => 1000  # requests
+use Rack::Throttle::Hourly,   :max => 100   # requests
+use Rack::Throttle::Minute,   :max => 60    # requests
+use Rack::Throttle::Second,   :max => 1     # requests
+use Rack::Throttle::Interval, :min => 3.0   # seconds
+```
 
 ### Storing the rate-limiting counters in a GDBM database
 
-    require 'gdbm'
-    
-    use Rack::Throttle::Interval, :cache => GDBM.new('tmp/throttle.db')
+```ruby
+require 'gdbm'
+
+use Rack::Throttle::Interval, :cache => GDBM.new('tmp/throttle.db')
+```
 
 ### Storing the rate-limiting counters on a Memcached server
 
-    require 'memcached'
-    
-    use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => :throttle
+```ruby
+require 'memcached'
+
+use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => :throttle
+```
 
 ### Storing the rate-limiting counters on a Redis server
 
-    require 'redis'
-    
-    use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
+```ruby
+require 'redis'
+
+use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
+```
 
 Throttling Strategies
 ---------------------
@@ -122,10 +146,10 @@ Throttling Strategies
   requests per 1 minute, which works out to an average of 1 request per
   second).
 * `Rack::Throttle::Second`: Throttles the application by defining a
-  maximum number of allowed HTTP requests per second (by default, 1 
+  maximum number of allowed HTTP requests per second (by default, 1
   request per second).
 * `Rack::Throttle::Rules`: Throttles the application by defining
-  different rules of allowed HTTP request per time_window based on the 
+  different rules of allowed HTTP request per time_window based on the
   request method and the request paths, or use a default.
 
 You can fully customize the implementation details of any of these strategies
@@ -139,7 +163,7 @@ entirely new kinds of throttling strategies by subclassing the
 
 Customize the `max_per_second` to be different depending on the request's method.
 
-```
+```ruby
 class Rack::Throttle::RequestMethod < Rack::Throttle::Second
 
   def max_per_second(request = nil)
@@ -157,7 +181,7 @@ end
 
 Passing the correct options for `Rules` strategy.
 
-```
+```ruby
 rules = [
   { method: "POST", limit: 5 },
   { method: "GET", limit: 10 },
@@ -176,19 +200,19 @@ use Rack::Throttle::Rules, rules: rules, ip_whitelist: ip_whitelist, default: de
 ```
 
 This configuration would allow a maximum of 3 profile requests per second (default), i
-1 reset password requests per second, 5 POST and 10 GET requests per second 
+1 reset password requests per second, 5 POST and 10 GET requests per second
 (always also based on the IPaddress). Additionally it would whitelist the external callback
 and add a ip-whitelisting for the given ips.
 
-Rules are checked in this order: 
+Rules are checked in this order:
 * ip whitelist
 * rules with `paths`,
-* rules with `methods` only, 
+* rules with `methods` only,
 * `default`.
 
 It is possible to set the time window for this strategy to: `:second` (default), `:minute`, `:hour` or `:day`, to change the check interval to these windows.
 
-```
+```ruby
 use Rack::Throttle::Rules, limits: limits, time_window: :minute
 ```
 
