@@ -196,7 +196,7 @@ ip_whitelist = [
 default = 10
 
 
-use Rack::Throttle::Rules, rules: rules, ip_whitelist: ips, default: default
+use Rack::Throttle::Rules, rules: rules, ip_whitelist: ip_whitelist, default: default
 ```
 
 This configuration would allow a maximum of 3 profile requests per second (default), i
@@ -213,7 +213,7 @@ Rules are checked in this order:
 It is possible to set the time window for this strategy to: `:second` (default), `:minute`, `:hour` or `:day`, to change the check interval to these windows.
 
 ```ruby
-use Rack::Throttle::MethodAndPath, limits: limits, time_window: :minute
+use Rack::Throttle::Rules, limits: limits, time_window: :minute
 ```
 
 
