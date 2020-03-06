@@ -56,7 +56,7 @@ module Rack
 
       def path_matches?(rule, path)
         return true unless rule[:path]
-        return true if     path.to_s.gsub(%r{/+}, '/').match(rule[:path])
+        return true if     path.to_s.gsub(%r{/+}, "/").match(rule[:path])
         false
       end
 
