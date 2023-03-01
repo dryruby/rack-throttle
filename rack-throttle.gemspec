@@ -40,7 +40,7 @@ Gem::Specification.new do |gem|
 
   gem.post_install_message       = <<-POST
 rack-throttle is no longer under active development. Please consider
-using https://github.com/kickstarter/rack-attack instead as it is
+using https://github.com/rack/rack-attack instead as it is
 more feature rich & well supported.
   POST
 end

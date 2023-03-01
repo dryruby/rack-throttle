@@ -1,7 +1,7 @@
 DEPRECATED We suggest using rack-attack instead
 ===============================================
 
-<https://github.com/kickstarter/rack-attack> Accomplishes the same goal as rack-throttle,
+<https://github.com/rack/rack-attack> Accomplishes the same goal as rack-throttle,
 but has more active maintenance, usage, and maturity. Please think about using rack-attack
 over rack-throttle.
 
