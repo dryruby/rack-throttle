@@ -213,7 +213,7 @@ Rules are checked in this order:
 It is possible to set the time window for this strategy to: `:second` (default), `:minute`, `:hour` or `:day`, to change the check interval to these windows.
 
 ```ruby
-use Rack::Throttle::Rules, limits: limits, time_window: :minute
+use Rack::Throttle::Rules, rules: rules, time_window: :minute
 ```
 
 
